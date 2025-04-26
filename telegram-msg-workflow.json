@@ -1,0 +1,1454 @@
+{
+    "nodes": [
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "version": 2,
+              "leftValue": "",
+              "caseSensitive": true,
+              "typeValidation": "strict"
+            },
+            "conditions": [
+              {
+                "id": "5fe3c0d8-bd61-4943-b152-9e6315134520",
+                "operator": {
+                  "name": "filter.operator.equals",
+                  "type": "string",
+                  "operation": "equals"
+                },
+                "leftValue": "={{ $('Listen for Telegram Events').item.json.body.message.from.first_name.trim() }}",
+                "rightValue": "={{ $json.first_name.trim() }}"
+              },
+              {
+                "id": "98a0ea91-0567-459c-bbce-06abc14a49ce",
+                "operator": {
+                  "name": "filter.operator.equals",
+                  "type": "string",
+                  "operation": "equals"
+                },
+                "leftValue": "={{$('Listen for Telegram Events').item.json.body.message.from.last_name.trim() }}",
+                "rightValue": "={{ $json.last_name.trim()  }}"
+              },
+              {
+                "id": "18a96c1f-f2a0-4a2a-b789-606763df4423",
+                "operator": {
+                  "type": "number",
+                  "operation": "equals"
+                },
+                "leftValue": "={{ parseInt($('Listen for Telegram Events').item.json.body.message.from.id) }}",
+                "rightValue": "={{parseInt( $('Validation').item.json.id) }}"
+              }
+            ],
+            "combinator": "and"
+          },
+          "looseTypeValidation": "=",
+          "options": {}
+        },
+        "id": "cd6b5caa-8b73-48bc-b918-a404b2ef8380",
+        "name": "Check User & Chat ID",
+        "type": "n8n-nodes-base.if",
+        "position": [
+          1320,
+          1160
+        ],
+        "typeVersion": 2.2,
+        "alwaysOutputData": false
+      },
+      {
+        "parameters": {
+          "chatId": "={{ $('Listen for Telegram Events').item.json.body.message.chat.id }}",
+          "text": "=Unable to process your message.",
+          "additionalFields": {
+            "appendAttribution": false
+          }
+        },
+        "id": "1f1c4127-e552-4940-9ed1-bd9ef7a19900",
+        "name": "Error message",
+        "type": "n8n-nodes-base.telegram",
+        "position": [
+          1200,
+          1420
+        ],
+        "typeVersion": 1.2,
+        "webhookId": "d62a6deb-0633-40cb-a8c2-f2fb4cec29a2",
+        "credentials": {
+          "telegramApi": {
+            "id": "JdRRjPR0hJjZffy0",
+            "name": "Telegram account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "content": "# Receive Telegram Message with Webhook",
+          "height": 652,
+          "width": 929
+        },
+        "id": "540f2d7e-5c44-4b91-8847-31bf43bc7305",
+        "name": "Sticky Note",
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          900,
+          660
+        ],
+        "typeVersion": 1
+      },
+      {
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "your-endpoint",
+          "options": {
+            "binaryPropertyName": "data"
+          }
+        },
+        "id": "72d7d99f-35a0-42ee-a55e-8188b724f99d",
+        "name": "Listen for Telegram Events",
+        "type": "n8n-nodes-base.webhook",
+        "position": [
+          880,
+          1160
+        ],
+        "webhookId": "b4ed4c80-a655-4ff2-87d6-febd5280d343",
+        "typeVersion": 2
+      },
+      {
+        "parameters": {
+          "url": "=https://api.telegram.org/{{ $json.token }}/setWebhook",
+          "sendQuery": true,
+          "queryParameters": {
+            "parameters": [
+              {
+                "name": "url",
+                "value": "={{ $json.test_url }}"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "id": "226cd9d1-3282-4828-9954-a2770c89739d",
+        "name": "Set Webhook Test URL",
+        "type": "n8n-nodes-base.httpRequest",
+        "position": [
+          1480,
+          440
+        ],
+        "typeVersion": 4.2
+      },
+      {
+        "parameters": {
+          "content": "# Telegram Webhook Tools\n\n## Setting your Telegram Bot WebHook the Easy Way\n",
+          "height": 532,
+          "width": 1638,
+          "color": 3
+        },
+        "id": "2550813a-fb52-43f3-8130-b129cfca16e6",
+        "name": "Sticky Note2",
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          1420,
+          120
+        ],
+        "typeVersion": 1
+      },
+      {
+        "parameters": {
+          "url": "=https://api.telegram.org/{{$json.token}}/getWebhookInfo",
+          "options": {}
+        },
+        "id": "37af27a9-b42d-4332-893f-8a7c82841609",
+        "name": "Get Telegram Webhook Info",
+        "type": "n8n-nodes-base.httpRequest",
+        "position": [
+          2160,
+          -240
+        ],
+        "typeVersion": 4.2
+      },
+      {
+        "parameters": {
+          "content": "# Process Audio",
+          "height": 429,
+          "width": 1113,
+          "color": 4
+        },
+        "id": "1da26312-b464-48d3-b5a3-450422e0a672",
+        "name": "Sticky Note5",
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          1720,
+          900
+        ],
+        "typeVersion": 1
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "17989eb0-feca-4631-b5c8-34b1d4a6c72b",
+                "name": "image_file_id",
+                "type": "string",
+                "value": "={{ $json.body.message.photo.last().file_id }}"
+              },
+              {
+                "id": "9317d7ae-dffd-4b1f-9a9c-b3cc4f1e0dd3",
+                "name": "caption",
+                "type": "string",
+                "value": "={{ $json.body.message.caption }}"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "id": "e13dad82-bcbb-4bad-b9ce-3d16052ac8f0",
+        "name": "Image Schema",
+        "type": "n8n-nodes-base.set",
+        "position": [
+          1760,
+          1660
+        ],
+        "typeVersion": 3.4
+      },
+      {
+        "parameters": {
+          "content": "# Process Image",
+          "height": 432,
+          "width": 1289,
+          "color": 6
+        },
+        "id": "b11f0c76-0172-4efe-b3ff-8ea8f1b6e328",
+        "name": "Sticky Note3",
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          1860,
+          1380
+        ],
+        "typeVersion": 1
+      },
+      {
+        "parameters": {
+          "options": {}
+        },
+        "id": "84af6d91-b054-44fb-a09c-4bc0877d75f7",
+        "name": "gpt-4o-mini",
+        "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "position": [
+          2440,
+          980
+        ],
+        "typeVersion": 1,
+        "credentials": {
+          "openAiApi": {
+            "id": "tLAjgITbGkNu6aiU",
+            "name": "OpenAi account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "resource": "file",
+          "fileId": "={{ $json.body.message.voice.file_id }}"
+        },
+        "id": "a58e5d4f-61e5-41e7-92b5-1f0dadc25d9f",
+        "name": "Get Audio File",
+        "type": "n8n-nodes-base.telegram",
+        "position": [
+          1760,
+          860
+        ],
+        "typeVersion": 1.2,
+        "webhookId": "c96223da-17f2-426d-b915-691d28942956",
+        "credentials": {
+          "telegramApi": {
+            "id": "JdRRjPR0hJjZffy0",
+            "name": "Telegram account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "resource": "file",
+          "fileId": "={{ $json.image_file_id }}"
+        },
+        "id": "16e1d064-6389-4934-a842-1bbef828015c",
+        "name": "Get Image",
+        "type": "n8n-nodes-base.telegram",
+        "position": [
+          2040,
+          1660
+        ],
+        "typeVersion": 1.2,
+        "webhookId": "39d58e81-8495-4fee-8924-590985d3aa76",
+        "credentials": {
+          "telegramApi": {
+            "id": "JdRRjPR0hJjZffy0",
+            "name": "Telegram account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "resource": "image",
+          "operation": "analyze",
+          "modelId": {
+            "__rl": true,
+            "mode": "list",
+            "value": "gpt-4o-mini",
+            "cachedResultName": "GPT-4O-MINI"
+          },
+          "inputType": "base64",
+          "options": {}
+        },
+        "id": "70a7dbfc-ba3a-44df-ba17-aa1cae173c58",
+        "name": "Analyze Image",
+        "type": "@n8n/n8n-nodes-langchain.openAi",
+        "position": [
+          2940,
+          1660
+        ],
+        "typeVersion": 1.6,
+        "credentials": {
+          "openAiApi": {
+            "id": "tLAjgITbGkNu6aiU",
+            "name": "OpenAi account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "resource": "audio",
+          "operation": "transcribe",
+          "binaryPropertyName": "=data",
+          "options": {}
+        },
+        "id": "437ff80c-0eec-4092-a6a0-99f5ce287208",
+        "name": "Transcribe Recording",
+        "type": "@n8n/n8n-nodes-langchain.openAi",
+        "position": [
+          2040,
+          860
+        ],
+        "typeVersion": 1.6,
+        "credentials": {
+          "openAiApi": {
+            "id": "tLAjgITbGkNu6aiU",
+            "name": "OpenAi account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "content": "# Process Text",
+          "height": 429,
+          "width": 1253,
+          "color": 5
+        },
+        "id": "722ec647-b8e0-4bfb-a533-3ad353217583",
+        "name": "Sticky Note6",
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          1580,
+          1200
+        ],
+        "typeVersion": 1
+      },
+      {
+        "parameters": {
+          "options": {}
+        },
+        "id": "bbf5241f-77bc-474c-a19a-6a6a30c1897d",
+        "name": "gpt-4o-mini1",
+        "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "position": [
+          2060,
+          1400
+        ],
+        "typeVersion": 1,
+        "credentials": {
+          "openAiApi": {
+            "id": "tLAjgITbGkNu6aiU",
+            "name": "OpenAi account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "chatId": "=-4626445873",
+          "text": "={{ $json.description }} for Testing",
+          "additionalFields": {}
+        },
+        "id": "373e3be7-befc-49f9-bf24-e961ffb0340a",
+        "name": "Test Webhook Status",
+        "type": "n8n-nodes-base.telegram",
+        "position": [
+          1700,
+          440
+        ],
+        "typeVersion": 1.2,
+        "webhookId": "372b418f-8117-47fc-8b30-da534df2a5e4",
+        "credentials": {
+          "telegramApi": {
+            "id": "JdRRjPR0hJjZffy0",
+            "name": "Telegram account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "chatId": "=-4626445873",
+          "text": "={{ $json.description }} for Production",
+          "additionalFields": {}
+        },
+        "id": "848f06ea-ce5e-41b7-a212-25d99bbc0ad6",
+        "name": "Production Webhook Status",
+        "type": "n8n-nodes-base.telegram",
+        "position": [
+          2500,
+          440
+        ],
+        "typeVersion": 1.2,
+        "webhookId": "ac580145-2332-4dd0-a9a3-3da70263dd0b",
+        "credentials": {
+          "telegramApi": {
+            "id": "JdRRjPR0hJjZffy0",
+            "name": "Telegram account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "url": "=https://api.telegram.org/{{ $json.token }}/setWebhook",
+          "sendQuery": true,
+          "queryParameters": {
+            "parameters": [
+              {
+                "name": "url",
+                "value": "={{ $json.production_url }}"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "id": "edb84825-a63a-4ccd-a2cc-14be9b53b2c3",
+        "name": "Set Webhook Production URL",
+        "type": "n8n-nodes-base.httpRequest",
+        "position": [
+          2280,
+          440
+        ],
+        "typeVersion": 4.2
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "b37b48ba-8fef-4e6c-bbca-73e6c2e1e0a8",
+                "name": "text",
+                "type": "string",
+                "value": "={{ $('Listen for Telegram Events').item.json.body.message.text }}"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "id": "589471c5-4008-410b-9783-f08bc60aa06a",
+        "name": "Edit Fields",
+        "type": "n8n-nodes-base.set",
+        "position": [
+          1760,
+          1280
+        ],
+        "typeVersion": 3.4
+      },
+      {
+        "parameters": {
+          "chatId": "={{ $('Listen for Telegram Events').item.json.body.message.chat.id }}",
+          "text": "=Task message: <i>{{ $json.text }}</i>",
+          "additionalFields": {
+            "appendAttribution": false,
+            "parse_mode": "HTML"
+          }
+        },
+        "id": "23f9bb37-5466-4011-a5a4-6381a659b901",
+        "name": "Audio Task Message",
+        "type": "n8n-nodes-base.telegram",
+        "position": [
+          2900,
+          700
+        ],
+        "typeVersion": 1.2,
+        "webhookId": "a5553ea9-f50e-4d3f-9496-86176f678103",
+        "credentials": {
+          "telegramApi": {
+            "id": "JdRRjPR0hJjZffy0",
+            "name": "Telegram account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "chatId": "={{ $('Listen for Telegram Events').item.json.body.message.chat.id }}",
+          "text": "=Other message: <i>{{ $json.text }}</i>",
+          "additionalFields": {
+            "appendAttribution": false,
+            "parse_mode": "HTML"
+          }
+        },
+        "id": "1dbb7ee0-63d3-4689-9232-ffdaa46b0ac3",
+        "name": "Audio Other Message",
+        "type": "n8n-nodes-base.telegram",
+        "position": [
+          2900,
+          860
+        ],
+        "typeVersion": 1.2,
+        "webhookId": "f515300d-ad08-4f18-9ade-17d9ee92dae0",
+        "credentials": {
+          "telegramApi": {
+            "id": "JdRRjPR0hJjZffy0",
+            "name": "Telegram account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "chatId": "={{ $('Listen for Telegram Events').item.json.body.message.chat.id }}",
+          "text": "=Task message: <i>{{ $json.text }}</i>",
+          "additionalFields": {
+            "appendAttribution": false,
+            "parse_mode": "HTML"
+          }
+        },
+        "id": "c5396254-9bf6-4942-b657-ced28f435eec",
+        "name": "Text Task Message",
+        "type": "n8n-nodes-base.telegram",
+        "position": [
+          2620,
+          1120
+        ],
+        "typeVersion": 1.2,
+        "webhookId": "50c6d227-9508-49e3-998e-79f3243d90c0",
+        "credentials": {
+          "telegramApi": {
+            "id": "JdRRjPR0hJjZffy0",
+            "name": "Telegram account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "chatId": "={{ $('Listen for Telegram Events').item.json.body.message.chat.id }}",
+          "text": "=Other message: <i>{{ $json.text }}</i>",
+          "additionalFields": {
+            "appendAttribution": false,
+            "parse_mode": "HTML"
+          }
+        },
+        "id": "4b6c544c-73cb-4e2e-a305-e68eb9b59c83",
+        "name": "Text Other Message",
+        "type": "n8n-nodes-base.telegram",
+        "position": [
+          2560,
+          1480
+        ],
+        "typeVersion": 1.2,
+        "webhookId": "a1edbe87-0e6b-4e92-9ee4-c2e291ec525b",
+        "credentials": {
+          "telegramApi": {
+            "id": "JdRRjPR0hJjZffy0",
+            "name": "Telegram account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "chatId": "={{ $('Listen for Telegram Events').item.json.body.message.chat.id }}",
+          "text": "={{ $json.content }}",
+          "additionalFields": {
+            "appendAttribution": false
+          }
+        },
+        "id": "47e29b88-d532-4795-8578-96aaa0094a97",
+        "name": "Image Message",
+        "type": "n8n-nodes-base.telegram",
+        "position": [
+          3160,
+          1660
+        ],
+        "typeVersion": 1.2,
+        "webhookId": "e857bc42-951d-41a2-93ff-bc543669e15c",
+        "credentials": {
+          "telegramApi": {
+            "id": "JdRRjPR0hJjZffy0",
+            "name": "Telegram account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "toBinary",
+          "sourceProperty": "data",
+          "options": {
+            "fileName": "={{ $json.result.file_path }}"
+          }
+        },
+        "id": "5bfd8a2d-190b-4e23-b5f3-5811b93543d8",
+        "name": "Convert to Image File",
+        "type": "n8n-nodes-base.convertToFile",
+        "position": [
+          2720,
+          1660
+        ],
+        "typeVersion": 1.1
+      },
+      {
+        "parameters": {
+          "operation": "binaryToPropery",
+          "options": {}
+        },
+        "id": "f7f8eef2-1c67-4b94-a803-fd0cc13e0bd5",
+        "name": "Extract from File to Base64",
+        "type": "n8n-nodes-base.extractFromFile",
+        "position": [
+          2420,
+          1660
+        ],
+        "typeVersion": 1
+      },
+      {
+        "parameters": {
+          "inputText": "={{ $json.text }}",
+          "categories": {
+            "categories": [
+              {
+                "category": "task",
+                "description": "If the message is about about creating a task/todo"
+              },
+              {
+                "category": "other",
+                "description": "If the message is not about creating a task/todo "
+              }
+            ]
+          },
+          "options": {}
+        },
+        "id": "17dda44d-6e23-4e30-a817-17a383e21169",
+        "name": "Text Classifier Audio",
+        "type": "@n8n/n8n-nodes-langchain.textClassifier",
+        "position": [
+          2340,
+          760
+        ],
+        "typeVersion": 1
+      },
+      {
+        "parameters": {
+          "inputText": "={{ $('Listen for Telegram Events').item.json.body.message.text }}",
+          "categories": {
+            "categories": [
+              {
+                "category": "task",
+                "description": "If the message is about about creating a task/todo"
+              },
+              {
+                "category": "other",
+                "description": "If the message is not about creating a task/todo "
+              }
+            ]
+          },
+          "options": {}
+        },
+        "id": "39543792-4545-4a38-8d65-fa3176b29a3e",
+        "name": "Text Classifier",
+        "type": "@n8n/n8n-nodes-langchain.textClassifier",
+        "position": [
+          1980,
+          1180
+        ],
+        "typeVersion": 1
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "87811892-85f5-4578-a149-3edd94d3815a",
+                "name": "token",
+                "type": "string",
+                "value": "bot7647578421:AAEJspWDuY2kPXPYCbCiM_e5LNyqN09uNAc"
+              },
+              {
+                "id": "d2b9ab83-44ad-4741-aac9-1feed974c015",
+                "name": "test_url",
+                "type": "string",
+                "value": "https://strawstacksolutions.app.n8n.cloud/webhook-test/your-endpoint"
+              },
+              {
+                "id": "0c671fbf-aa2c-42ef-9e8b-398ac38358d0",
+                "name": "production_url",
+                "type": "string",
+                "value": "https://strawstacksolutions.app.n8n.cloud/webhook/your-endpoint"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "id": "ba633ce8-a377-4e79-b7f8-01c148b40723",
+        "name": "Telegram Token & Webhooks",
+        "type": "n8n-nodes-base.set",
+        "position": [
+          1940,
+          -240
+        ],
+        "typeVersion": 3.4
+      },
+      {
+        "parameters": {
+          "chatId": "=-4626445873",
+          "text": "={{ JSON.stringify($json.result, null, 2)  }}",
+          "additionalFields": {}
+        },
+        "id": "c863b918-4cef-4adc-a562-9ee560d8d9a1",
+        "name": "Get Webhook Status",
+        "type": "n8n-nodes-base.telegram",
+        "position": [
+          2380,
+          -240
+        ],
+        "typeVersion": 1.2,
+        "webhookId": "5e4c45be-c593-4050-84c6-08a5dea5ba8c",
+        "credentials": {
+          "telegramApi": {
+            "id": "JdRRjPR0hJjZffy0",
+            "name": "Telegram account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "0cea6da1-652a-4c1e-94c3-30608ced90f8",
+                "name": "first_name",
+                "type": "string",
+                "value": "={{ $json.body.message.from.first_name }}"
+              },
+              {
+                "id": "b90280c6-3e36-49ca-9e7e-e15c42d256cc",
+                "name": "last_name",
+                "type": "string",
+                "value": "= {{ $json.body.message.from.last_name }}"
+              },
+              {
+                "id": "f6d86283-16ca-447e-8427-7d3d190babc0",
+                "name": "id",
+                "type": "number",
+                "value": "={{ $json.body.message.from.id }}"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "id": "4607b281-68df-4f6f-a5df-8c18f36ed413",
+        "name": "Validation",
+        "type": "n8n-nodes-base.set",
+        "position": [
+          1100,
+          1160
+        ],
+        "typeVersion": 3.4
+      },
+      {
+        "parameters": {
+          "content": "## Validate Telegram User\n",
+          "height": 260,
+          "width": 420,
+          "color": 7
+        },
+        "id": "68dba5ee-3734-43f7-bee8-9e850463ea8b",
+        "name": "Sticky Note4",
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          1040,
+          1060
+        ],
+        "typeVersion": 1
+      },
+      {
+        "parameters": {
+          "content": "## Webhook Status",
+          "height": 240,
+          "width": 460,
+          "color": 7
+        },
+        "id": "8c587799-5f00-4b9d-bcc2-321531c0e85e",
+        "name": "Sticky Note7",
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          1920,
+          -340
+        ],
+        "typeVersion": 1
+      },
+      {
+        "parameters": {
+          "content": "## Set Webhook for Testing",
+          "height": 240,
+          "width": 460,
+          "color": 7
+        },
+        "id": "0e6401da-0e49-404f-8327-cdc12641d3dd",
+        "name": "Sticky Note8",
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          1460,
+          360
+        ],
+        "typeVersion": 1
+      },
+      {
+        "parameters": {
+          "content": "## Set Webhook for Production",
+          "height": 240,
+          "width": 480,
+          "color": 7
+        },
+        "id": "b36e3d1f-4f61-4dd7-8ee8-7dbe6ff018cd",
+        "name": "Sticky Note9",
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          2240,
+          360
+        ],
+        "typeVersion": 1
+      },
+      {
+        "parameters": {
+          "rules": {
+            "values": [
+              {
+                "conditions": {
+                  "options": {
+                    "version": 2,
+                    "leftValue": "",
+                    "caseSensitive": true,
+                    "typeValidation": "strict"
+                  },
+                  "conditions": [
+                    {
+                      "operator": {
+                        "type": "object",
+                        "operation": "exists",
+                        "singleValue": true
+                      },
+                      "leftValue": "={{ $('Listen for Telegram Events').item.json.body.message.voice }}",
+                      "rightValue": ""
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "audio"
+              },
+              {
+                "conditions": {
+                  "options": {
+                    "version": 2,
+                    "leftValue": "",
+                    "caseSensitive": true,
+                    "typeValidation": "strict"
+                  },
+                  "conditions": [
+                    {
+                      "id": "342f0883-d959-44a2-b80d-379e39c76218",
+                      "operator": {
+                        "type": "string",
+                        "operation": "exists",
+                        "singleValue": true
+                      },
+                      "leftValue": "={{ $('Listen for Telegram Events').item.json.body.message.text }}",
+                      "rightValue": ""
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "text"
+              },
+              {
+                "conditions": {
+                  "options": {
+                    "version": 2,
+                    "leftValue": "",
+                    "caseSensitive": true,
+                    "typeValidation": "strict"
+                  },
+                  "conditions": [
+                    {
+                      "id": "ded3a600-f861-413a-8892-3fc5ea935ecb",
+                      "operator": {
+                        "type": "array",
+                        "operation": "exists",
+                        "singleValue": true
+                      },
+                      "leftValue": "={{ $('Listen for Telegram Events').item.json.body.message.photo }}",
+                      "rightValue": ""
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "image"
+              }
+            ]
+          },
+          "options": {
+            "fallbackOutput": "extra"
+          }
+        },
+        "id": "d0823137-0ca8-430f-b82e-0f4d8558a0c5",
+        "name": "Message Router",
+        "type": "n8n-nodes-base.switch",
+        "position": [
+          1540,
+          1040
+        ],
+        "typeVersion": 3.2
+      },
+      {
+        "parameters": {},
+        "type": "n8n-nodes-base.manualTrigger",
+        "typeVersion": 1,
+        "position": [
+          1720,
+          -240
+        ],
+        "id": "56ab4f60-011d-47fd-ae3a-80e23572abc5",
+        "name": "When clicking ‘Test workflow’"
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "loose",
+              "version": 2
+            },
+            "conditions": [
+              {
+                "id": "752f3817-54fb-40ec-bc6d-6d9b4fac6b49",
+                "leftValue": "={{ $json.text.includes('?') }}",
+                "rightValue": "={{ true }}",
+                "operator": {
+                  "type": "string",
+                  "operation": "equals",
+                  "name": "filter.operator.equals"
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "looseTypeValidation": true,
+          "options": {}
+        },
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.2,
+        "position": [
+          2320,
+          1360
+        ],
+        "id": "e0bfeecd-9db6-495a-9473-06d8d706a4c1",
+        "name": "If"
+      },
+      {
+        "parameters": {
+          "resource": "assistant",
+          "operation": "create",
+          "modelId": {
+            "__rl": true,
+            "value": "gpt-4o",
+            "mode": "list",
+            "cachedResultName": "GPT-4O"
+          },
+          "name": "ChristianQuestionsBot",
+          "description": "The bot designed for answering questions about the faith",
+          "instructions": "=You are a helpful and respectful assistant specialized in Christian theology. Answer all questions based on traditional Christian beliefs, referencing the Bible when appropriate. Keep your tone kind, humble, and conversational, and avoid debating or criticizing other beliefs. If a question is unclear or not related to Christianity, gently encourage the user to ask something related to faith, Jesus Christ, or the Bible.\n\nRespond with answers rooted in the Bible and traditional Christian doctrine. Use scripture when appropriate, and always reflect a Christ-like attitude—humble, patient, and wise.\n",
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.openAi",
+        "typeVersion": 1.8,
+        "position": [
+          2680,
+          1340
+        ],
+        "id": "ae4697c8-cc12-4009-b47b-ad91c3aee149",
+        "name": "OpenAI",
+        "credentials": {
+          "openAiApi": {
+            "id": "tLAjgITbGkNu6aiU",
+            "name": "OpenAi account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "chatId": "={{ $('Listen for Telegram Events').item.json.body.message.chat.id }}",
+          "text": "={{ $json.message.content }}",
+          "additionalFields": {}
+        },
+        "type": "n8n-nodes-base.telegram",
+        "typeVersion": 1.2,
+        "position": [
+          3520,
+          1340
+        ],
+        "id": "f2396488-3433-429c-a0e1-0f28f731ab56",
+        "name": "Telegram",
+        "webhookId": "1039d9a2-ff3f-45cf-997a-cdb07ccfb94b",
+        "credentials": {
+          "telegramApi": {
+            "id": "JdRRjPR0hJjZffy0",
+            "name": "Telegram account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "modelId": {
+            "__rl": true,
+            "value": "gpt-4",
+            "mode": "list",
+            "cachedResultName": "GPT-4"
+          },
+          "messages": {
+            "values": [
+              {
+                "content": "= {{ $json.instructions }}",
+                "role": "system"
+              },
+              {
+                "content": "={{ $('If').item.json.text }}"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.openAi",
+        "typeVersion": 1.8,
+        "position": [
+          2900,
+          1340
+        ],
+        "id": "bbfeac62-53a2-444f-8563-18411d26b829",
+        "name": "OpenAI2",
+        "credentials": {
+          "openAiApi": {
+            "id": "tLAjgITbGkNu6aiU",
+            "name": "OpenAi account"
+          }
+        }
+      }
+    ],
+    "connections": {
+      "Check User & Chat ID": {
+        "main": [
+          [
+            {
+              "node": "Message Router",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Error message",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Listen for Telegram Events": {
+        "main": [
+          [
+            {
+              "node": "Validation",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Set Webhook Test URL": {
+        "main": [
+          [
+            {
+              "node": "Test Webhook Status",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Get Telegram Webhook Info": {
+        "main": [
+          [
+            {
+              "node": "Get Webhook Status",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Image Schema": {
+        "main": [
+          [
+            {
+              "node": "Get Image",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "gpt-4o-mini": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "Text Classifier Audio",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Get Audio File": {
+        "main": [
+          [
+            {
+              "node": "Transcribe Recording",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Get Image": {
+        "main": [
+          [
+            {
+              "node": "Extract from File to Base64",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Analyze Image": {
+        "main": [
+          [
+            {
+              "node": "Image Message",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Transcribe Recording": {
+        "main": [
+          [
+            {
+              "node": "Text Classifier Audio",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "gpt-4o-mini1": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "Text Classifier",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Set Webhook Production URL": {
+        "main": [
+          [
+            {
+              "node": "Production Webhook Status",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Edit Fields": {
+        "main": [
+          [
+            {
+              "node": "Text Classifier",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Text Task Message": {
+        "main": [
+          []
+        ]
+      },
+      "Convert to Image File": {
+        "main": [
+          [
+            {
+              "node": "Analyze Image",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Extract from File to Base64": {
+        "main": [
+          [
+            {
+              "node": "Convert to Image File",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Text Classifier Audio": {
+        "main": [
+          [
+            {
+              "node": "Audio Task Message",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Audio Other Message",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Text Classifier": {
+        "main": [
+          [
+            {
+              "node": "Text Task Message",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "If",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Telegram Token & Webhooks": {
+        "main": [
+          [
+            {
+              "node": "Get Telegram Webhook Info",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Set Webhook Test URL",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Set Webhook Production URL",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Validation": {
+        "main": [
+          [
+            {
+              "node": "Check User & Chat ID",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Message Router": {
+        "main": [
+          [
+            {
+              "node": "Get Audio File",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Edit Fields",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Image Schema",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Error message",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "When clicking ‘Test workflow’": {
+        "main": [
+          [
+            {
+              "node": "Telegram Token & Webhooks",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "If": {
+        "main": [
+          [
+            {
+              "node": "OpenAI",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Text Other Message",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "OpenAI": {
+        "main": [
+          [
+            {
+              "node": "OpenAI2",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "OpenAI2": {
+        "main": [
+          [
+            {
+              "node": "Telegram",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "pinData": {
+      "Listen for Telegram Events": [
+        {
+          "headers": {
+            "host": "strawstacksolutions.app.n8n.cloud",
+            "content-length": "462",
+            "accept-encoding": "gzip, br",
+            "cdn-loop": "cloudflare; loops=1; subreqs=1",
+            "cf-connecting-ip": "91.108.5.69",
+            "cf-ew-via": "15",
+            "cf-ipcountry": "NL",
+            "cf-ray": "92e52ad45312ffef-AMS",
+            "cf-visitor": "{\"scheme\":\"https\"}",
+            "cf-worker": "n8n.cloud",
+            "content-type": "application/json",
+            "x-forwarded-for": "91.108.5.69, 172.71.95.25",
+            "x-forwarded-host": "strawstacksolutions.app.n8n.cloud",
+            "x-forwarded-port": "443",
+            "x-forwarded-proto": "https",
+            "x-forwarded-server": "traefik-prod-users-gwc-41-785c66d969-9hjvc",
+            "x-is-trusted": "yes",
+            "x-real-ip": "91.108.5.69"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "update_id": 509441009,
+            "message": {
+              "message_id": 52,
+              "from": {
+                "id": 1710061609,
+                "is_bot": false,
+                "first_name": "The robber",
+                "last_name": "Of the broker",
+                "username": "romaldiniii"
+              },
+              "chat": {
+                "id": -4626445873,
+                "title": "Christian Questions Automated",
+                "type": "group",
+                "all_members_are_administrators": true,
+                "accepted_gift_types": {
+                  "unlimited_gifts": false,
+                  "limited_gifts": false,
+                  "unique_gifts": false,
+                  "premium_subscription": false
+                }
+              },
+              "date": 1744318759,
+              "text": "Who is Jesus The Christ?"
+            }
+          },
+          "webhookUrl": "https://strawstacksolutions.app.n8n.cloud/webhook/your-endpoint",
+          "executionMode": "production"
+        }
+      ],
+      "Set Webhook Test URL": [
+        {
+          "ok": true,
+          "result": true,
+          "description": "Webhook was set"
+        }
+      ]
+    },
+    "meta": {
+      "templateCredsSetupCompleted": true,
+      "instanceId": "a4984753ab0734571a90865892b241f7e4fe4a718cd567093525c07af17be3ae"
+    }
+  }
