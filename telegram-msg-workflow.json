@@ -677,7 +677,7 @@
                 "id": "87811892-85f5-4578-a149-3edd94d3815a",
                 "name": "token",
                 "type": "string",
-                "value": "bot7647578421:AAEJspWDuY2kPXPYCbCiM_e5LNyqN09uNAc"
+                "value": "bot{{YOUR_TELEGRAM_BOT}}"
               },
               {
                 "id": "d2b9ab83-44ad-4741-aac9-1feed974c015",
