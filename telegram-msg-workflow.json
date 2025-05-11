@@ -1,1454 +1,2315 @@
 {
-    "nodes": [
-      {
-        "parameters": {
-          "conditions": {
-            "options": {
-              "version": 2,
-              "leftValue": "",
-              "caseSensitive": true,
-              "typeValidation": "strict"
-            },
-            "conditions": [
-              {
-                "id": "5fe3c0d8-bd61-4943-b152-9e6315134520",
-                "operator": {
-                  "name": "filter.operator.equals",
-                  "type": "string",
-                  "operation": "equals"
-                },
-                "leftValue": "={{ $('Listen for Telegram Events').item.json.body.message.from.first_name.trim() }}",
-                "rightValue": "={{ $json.first_name.trim() }}"
-              },
-              {
-                "id": "98a0ea91-0567-459c-bbce-06abc14a49ce",
-                "operator": {
-                  "name": "filter.operator.equals",
-                  "type": "string",
-                  "operation": "equals"
-                },
-                "leftValue": "={{$('Listen for Telegram Events').item.json.body.message.from.last_name.trim() }}",
-                "rightValue": "={{ $json.last_name.trim()  }}"
-              },
-              {
-                "id": "18a96c1f-f2a0-4a2a-b789-606763df4423",
-                "operator": {
-                  "type": "number",
-                  "operation": "equals"
-                },
-                "leftValue": "={{ parseInt($('Listen for Telegram Events').item.json.body.message.from.id) }}",
-                "rightValue": "={{parseInt( $('Validation').item.json.id) }}"
-              }
-            ],
-            "combinator": "and"
-          },
-          "looseTypeValidation": "=",
-          "options": {}
-        },
-        "id": "cd6b5caa-8b73-48bc-b918-a404b2ef8380",
-        "name": "Check User & Chat ID",
-        "type": "n8n-nodes-base.if",
-        "position": [
-          1320,
-          1160
-        ],
-        "typeVersion": 2.2,
-        "alwaysOutputData": false
-      },
-      {
-        "parameters": {
-          "chatId": "={{ $('Listen for Telegram Events').item.json.body.message.chat.id }}",
-          "text": "=Unable to process your message.",
-          "additionalFields": {
-            "appendAttribution": false
-          }
-        },
-        "id": "1f1c4127-e552-4940-9ed1-bd9ef7a19900",
-        "name": "Error message",
-        "type": "n8n-nodes-base.telegram",
-        "position": [
-          1200,
-          1420
-        ],
-        "typeVersion": 1.2,
-        "webhookId": "d62a6deb-0633-40cb-a8c2-f2fb4cec29a2",
-        "credentials": {
-          "telegramApi": {
-            "id": "JdRRjPR0hJjZffy0",
-            "name": "Telegram account"
-          }
-        }
-      },
-      {
-        "parameters": {
-          "content": "# Receive Telegram Message with Webhook",
-          "height": 652,
-          "width": 929
-        },
-        "id": "540f2d7e-5c44-4b91-8847-31bf43bc7305",
-        "name": "Sticky Note",
-        "type": "n8n-nodes-base.stickyNote",
-        "position": [
-          900,
-          660
-        ],
-        "typeVersion": 1
-      },
-      {
-        "parameters": {
-          "httpMethod": "POST",
-          "path": "your-endpoint",
-          "options": {
-            "binaryPropertyName": "data"
-          }
-        },
-        "id": "72d7d99f-35a0-42ee-a55e-8188b724f99d",
-        "name": "Listen for Telegram Events",
-        "type": "n8n-nodes-base.webhook",
-        "position": [
-          880,
-          1160
-        ],
-        "webhookId": "b4ed4c80-a655-4ff2-87d6-febd5280d343",
-        "typeVersion": 2
-      },
-      {
-        "parameters": {
-          "url": "=https://api.telegram.org/{{ $json.token }}/setWebhook",
-          "sendQuery": true,
-          "queryParameters": {
-            "parameters": [
-              {
-                "name": "url",
-                "value": "={{ $json.test_url }}"
-              }
-            ]
-          },
-          "options": {}
-        },
-        "id": "226cd9d1-3282-4828-9954-a2770c89739d",
-        "name": "Set Webhook Test URL",
-        "type": "n8n-nodes-base.httpRequest",
-        "position": [
-          1480,
-          440
-        ],
-        "typeVersion": 4.2
-      },
-      {
-        "parameters": {
-          "content": "# Telegram Webhook Tools\n\n## Setting your Telegram Bot WebHook the Easy Way\n",
-          "height": 532,
-          "width": 1638,
-          "color": 3
-        },
-        "id": "2550813a-fb52-43f3-8130-b129cfca16e6",
-        "name": "Sticky Note2",
-        "type": "n8n-nodes-base.stickyNote",
-        "position": [
-          1420,
-          120
-        ],
-        "typeVersion": 1
-      },
-      {
-        "parameters": {
-          "url": "=https://api.telegram.org/{{$json.token}}/getWebhookInfo",
-          "options": {}
-        },
-        "id": "37af27a9-b42d-4332-893f-8a7c82841609",
-        "name": "Get Telegram Webhook Info",
-        "type": "n8n-nodes-base.httpRequest",
-        "position": [
-          2160,
-          -240
-        ],
-        "typeVersion": 4.2
-      },
-      {
-        "parameters": {
-          "content": "# Process Audio",
-          "height": 429,
-          "width": 1113,
-          "color": 4
-        },
-        "id": "1da26312-b464-48d3-b5a3-450422e0a672",
-        "name": "Sticky Note5",
-        "type": "n8n-nodes-base.stickyNote",
-        "position": [
-          1720,
-          900
-        ],
-        "typeVersion": 1
-      },
-      {
-        "parameters": {
-          "assignments": {
-            "assignments": [
-              {
-                "id": "17989eb0-feca-4631-b5c8-34b1d4a6c72b",
-                "name": "image_file_id",
-                "type": "string",
-                "value": "={{ $json.body.message.photo.last().file_id }}"
-              },
-              {
-                "id": "9317d7ae-dffd-4b1f-9a9c-b3cc4f1e0dd3",
-                "name": "caption",
-                "type": "string",
-                "value": "={{ $json.body.message.caption }}"
-              }
-            ]
-          },
-          "options": {}
-        },
-        "id": "e13dad82-bcbb-4bad-b9ce-3d16052ac8f0",
-        "name": "Image Schema",
-        "type": "n8n-nodes-base.set",
-        "position": [
-          1760,
-          1660
-        ],
-        "typeVersion": 3.4
-      },
-      {
-        "parameters": {
-          "content": "# Process Image",
-          "height": 432,
-          "width": 1289,
-          "color": 6
-        },
-        "id": "b11f0c76-0172-4efe-b3ff-8ea8f1b6e328",
-        "name": "Sticky Note3",
-        "type": "n8n-nodes-base.stickyNote",
-        "position": [
-          1860,
-          1380
-        ],
-        "typeVersion": 1
-      },
-      {
-        "parameters": {
-          "options": {}
-        },
-        "id": "84af6d91-b054-44fb-a09c-4bc0877d75f7",
-        "name": "gpt-4o-mini",
-        "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
-        "position": [
-          2440,
-          980
-        ],
-        "typeVersion": 1,
-        "credentials": {
-          "openAiApi": {
-            "id": "tLAjgITbGkNu6aiU",
-            "name": "OpenAi account"
-          }
-        }
-      },
-      {
-        "parameters": {
-          "resource": "file",
-          "fileId": "={{ $json.body.message.voice.file_id }}"
-        },
-        "id": "a58e5d4f-61e5-41e7-92b5-1f0dadc25d9f",
-        "name": "Get Audio File",
-        "type": "n8n-nodes-base.telegram",
-        "position": [
-          1760,
-          860
-        ],
-        "typeVersion": 1.2,
-        "webhookId": "c96223da-17f2-426d-b915-691d28942956",
-        "credentials": {
-          "telegramApi": {
-            "id": "JdRRjPR0hJjZffy0",
-            "name": "Telegram account"
-          }
-        }
-      },
-      {
-        "parameters": {
-          "resource": "file",
-          "fileId": "={{ $json.image_file_id }}"
-        },
-        "id": "16e1d064-6389-4934-a842-1bbef828015c",
-        "name": "Get Image",
-        "type": "n8n-nodes-base.telegram",
-        "position": [
-          2040,
-          1660
-        ],
-        "typeVersion": 1.2,
-        "webhookId": "39d58e81-8495-4fee-8924-590985d3aa76",
-        "credentials": {
-          "telegramApi": {
-            "id": "JdRRjPR0hJjZffy0",
-            "name": "Telegram account"
-          }
-        }
-      },
-      {
-        "parameters": {
-          "resource": "image",
-          "operation": "analyze",
-          "modelId": {
-            "__rl": true,
-            "mode": "list",
-            "value": "gpt-4o-mini",
-            "cachedResultName": "GPT-4O-MINI"
-          },
-          "inputType": "base64",
-          "options": {}
-        },
-        "id": "70a7dbfc-ba3a-44df-ba17-aa1cae173c58",
-        "name": "Analyze Image",
-        "type": "@n8n/n8n-nodes-langchain.openAi",
-        "position": [
-          2940,
-          1660
-        ],
-        "typeVersion": 1.6,
-        "credentials": {
-          "openAiApi": {
-            "id": "tLAjgITbGkNu6aiU",
-            "name": "OpenAi account"
-          }
-        }
-      },
-      {
-        "parameters": {
-          "resource": "audio",
-          "operation": "transcribe",
-          "binaryPropertyName": "=data",
-          "options": {}
-        },
-        "id": "437ff80c-0eec-4092-a6a0-99f5ce287208",
-        "name": "Transcribe Recording",
-        "type": "@n8n/n8n-nodes-langchain.openAi",
-        "position": [
-          2040,
-          860
-        ],
-        "typeVersion": 1.6,
-        "credentials": {
-          "openAiApi": {
-            "id": "tLAjgITbGkNu6aiU",
-            "name": "OpenAi account"
-          }
-        }
-      },
-      {
-        "parameters": {
-          "content": "# Process Text",
-          "height": 429,
-          "width": 1253,
-          "color": 5
-        },
-        "id": "722ec647-b8e0-4bfb-a533-3ad353217583",
-        "name": "Sticky Note6",
-        "type": "n8n-nodes-base.stickyNote",
-        "position": [
-          1580,
-          1200
-        ],
-        "typeVersion": 1
-      },
-      {
-        "parameters": {
-          "options": {}
-        },
-        "id": "bbf5241f-77bc-474c-a19a-6a6a30c1897d",
-        "name": "gpt-4o-mini1",
-        "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
-        "position": [
-          2060,
-          1400
-        ],
-        "typeVersion": 1,
-        "credentials": {
-          "openAiApi": {
-            "id": "tLAjgITbGkNu6aiU",
-            "name": "OpenAi account"
-          }
-        }
-      },
-      {
-        "parameters": {
-          "chatId": "=-4626445873",
-          "text": "={{ $json.description }} for Testing",
-          "additionalFields": {}
-        },
-        "id": "373e3be7-befc-49f9-bf24-e961ffb0340a",
-        "name": "Test Webhook Status",
-        "type": "n8n-nodes-base.telegram",
-        "position": [
-          1700,
-          440
-        ],
-        "typeVersion": 1.2,
-        "webhookId": "372b418f-8117-47fc-8b30-da534df2a5e4",
-        "credentials": {
-          "telegramApi": {
-            "id": "JdRRjPR0hJjZffy0",
-            "name": "Telegram account"
-          }
-        }
-      },
-      {
-        "parameters": {
-          "chatId": "=-4626445873",
-          "text": "={{ $json.description }} for Production",
-          "additionalFields": {}
-        },
-        "id": "848f06ea-ce5e-41b7-a212-25d99bbc0ad6",
-        "name": "Production Webhook Status",
-        "type": "n8n-nodes-base.telegram",
-        "position": [
-          2500,
-          440
-        ],
-        "typeVersion": 1.2,
-        "webhookId": "ac580145-2332-4dd0-a9a3-3da70263dd0b",
-        "credentials": {
-          "telegramApi": {
-            "id": "JdRRjPR0hJjZffy0",
-            "name": "Telegram account"
-          }
-        }
-      },
-      {
-        "parameters": {
-          "url": "=https://api.telegram.org/{{ $json.token }}/setWebhook",
-          "sendQuery": true,
-          "queryParameters": {
-            "parameters": [
-              {
-                "name": "url",
-                "value": "={{ $json.production_url }}"
-              }
-            ]
-          },
-          "options": {}
-        },
-        "id": "edb84825-a63a-4ccd-a2cc-14be9b53b2c3",
-        "name": "Set Webhook Production URL",
-        "type": "n8n-nodes-base.httpRequest",
-        "position": [
-          2280,
-          440
-        ],
-        "typeVersion": 4.2
-      },
-      {
-        "parameters": {
-          "assignments": {
-            "assignments": [
-              {
-                "id": "b37b48ba-8fef-4e6c-bbca-73e6c2e1e0a8",
-                "name": "text",
-                "type": "string",
-                "value": "={{ $('Listen for Telegram Events').item.json.body.message.text }}"
-              }
-            ]
-          },
-          "options": {}
-        },
-        "id": "589471c5-4008-410b-9783-f08bc60aa06a",
-        "name": "Edit Fields",
-        "type": "n8n-nodes-base.set",
-        "position": [
-          1760,
-          1280
-        ],
-        "typeVersion": 3.4
-      },
-      {
-        "parameters": {
-          "chatId": "={{ $('Listen for Telegram Events').item.json.body.message.chat.id }}",
-          "text": "=Task message: <i>{{ $json.text }}</i>",
-          "additionalFields": {
-            "appendAttribution": false,
-            "parse_mode": "HTML"
-          }
-        },
-        "id": "23f9bb37-5466-4011-a5a4-6381a659b901",
-        "name": "Audio Task Message",
-        "type": "n8n-nodes-base.telegram",
-        "position": [
-          2900,
-          700
-        ],
-        "typeVersion": 1.2,
-        "webhookId": "a5553ea9-f50e-4d3f-9496-86176f678103",
-        "credentials": {
-          "telegramApi": {
-            "id": "JdRRjPR0hJjZffy0",
-            "name": "Telegram account"
-          }
-        }
-      },
-      {
-        "parameters": {
-          "chatId": "={{ $('Listen for Telegram Events').item.json.body.message.chat.id }}",
-          "text": "=Other message: <i>{{ $json.text }}</i>",
-          "additionalFields": {
-            "appendAttribution": false,
-            "parse_mode": "HTML"
-          }
-        },
-        "id": "1dbb7ee0-63d3-4689-9232-ffdaa46b0ac3",
-        "name": "Audio Other Message",
-        "type": "n8n-nodes-base.telegram",
-        "position": [
-          2900,
-          860
-        ],
-        "typeVersion": 1.2,
-        "webhookId": "f515300d-ad08-4f18-9ade-17d9ee92dae0",
-        "credentials": {
-          "telegramApi": {
-            "id": "JdRRjPR0hJjZffy0",
-            "name": "Telegram account"
-          }
-        }
-      },
-      {
-        "parameters": {
-          "chatId": "={{ $('Listen for Telegram Events').item.json.body.message.chat.id }}",
-          "text": "=Task message: <i>{{ $json.text }}</i>",
-          "additionalFields": {
-            "appendAttribution": false,
-            "parse_mode": "HTML"
-          }
-        },
-        "id": "c5396254-9bf6-4942-b657-ced28f435eec",
-        "name": "Text Task Message",
-        "type": "n8n-nodes-base.telegram",
-        "position": [
-          2620,
-          1120
-        ],
-        "typeVersion": 1.2,
-        "webhookId": "50c6d227-9508-49e3-998e-79f3243d90c0",
-        "credentials": {
-          "telegramApi": {
-            "id": "JdRRjPR0hJjZffy0",
-            "name": "Telegram account"
-          }
-        }
-      },
-      {
-        "parameters": {
-          "chatId": "={{ $('Listen for Telegram Events').item.json.body.message.chat.id }}",
-          "text": "=Other message: <i>{{ $json.text }}</i>",
-          "additionalFields": {
-            "appendAttribution": false,
-            "parse_mode": "HTML"
-          }
-        },
-        "id": "4b6c544c-73cb-4e2e-a305-e68eb9b59c83",
-        "name": "Text Other Message",
-        "type": "n8n-nodes-base.telegram",
-        "position": [
-          2560,
-          1480
-        ],
-        "typeVersion": 1.2,
-        "webhookId": "a1edbe87-0e6b-4e92-9ee4-c2e291ec525b",
-        "credentials": {
-          "telegramApi": {
-            "id": "JdRRjPR0hJjZffy0",
-            "name": "Telegram account"
-          }
-        }
-      },
-      {
-        "parameters": {
-          "chatId": "={{ $('Listen for Telegram Events').item.json.body.message.chat.id }}",
-          "text": "={{ $json.content }}",
-          "additionalFields": {
-            "appendAttribution": false
-          }
-        },
-        "id": "47e29b88-d532-4795-8578-96aaa0094a97",
-        "name": "Image Message",
-        "type": "n8n-nodes-base.telegram",
-        "position": [
-          3160,
-          1660
-        ],
-        "typeVersion": 1.2,
-        "webhookId": "e857bc42-951d-41a2-93ff-bc543669e15c",
-        "credentials": {
-          "telegramApi": {
-            "id": "JdRRjPR0hJjZffy0",
-            "name": "Telegram account"
-          }
-        }
-      },
-      {
-        "parameters": {
-          "operation": "toBinary",
-          "sourceProperty": "data",
-          "options": {
-            "fileName": "={{ $json.result.file_path }}"
-          }
-        },
-        "id": "5bfd8a2d-190b-4e23-b5f3-5811b93543d8",
-        "name": "Convert to Image File",
-        "type": "n8n-nodes-base.convertToFile",
-        "position": [
-          2720,
-          1660
-        ],
-        "typeVersion": 1.1
-      },
-      {
-        "parameters": {
-          "operation": "binaryToPropery",
-          "options": {}
-        },
-        "id": "f7f8eef2-1c67-4b94-a803-fd0cc13e0bd5",
-        "name": "Extract from File to Base64",
-        "type": "n8n-nodes-base.extractFromFile",
-        "position": [
-          2420,
-          1660
-        ],
-        "typeVersion": 1
-      },
-      {
-        "parameters": {
-          "inputText": "={{ $json.text }}",
-          "categories": {
-            "categories": [
-              {
-                "category": "task",
-                "description": "If the message is about about creating a task/todo"
-              },
-              {
-                "category": "other",
-                "description": "If the message is not about creating a task/todo "
-              }
-            ]
-          },
-          "options": {}
-        },
-        "id": "17dda44d-6e23-4e30-a817-17a383e21169",
-        "name": "Text Classifier Audio",
-        "type": "@n8n/n8n-nodes-langchain.textClassifier",
-        "position": [
-          2340,
-          760
-        ],
-        "typeVersion": 1
-      },
-      {
-        "parameters": {
-          "inputText": "={{ $('Listen for Telegram Events').item.json.body.message.text }}",
-          "categories": {
-            "categories": [
-              {
-                "category": "task",
-                "description": "If the message is about about creating a task/todo"
-              },
-              {
-                "category": "other",
-                "description": "If the message is not about creating a task/todo "
-              }
-            ]
-          },
-          "options": {}
-        },
-        "id": "39543792-4545-4a38-8d65-fa3176b29a3e",
-        "name": "Text Classifier",
-        "type": "@n8n/n8n-nodes-langchain.textClassifier",
-        "position": [
-          1980,
-          1180
-        ],
-        "typeVersion": 1
-      },
-      {
-        "parameters": {
-          "assignments": {
-            "assignments": [
-              {
-                "id": "87811892-85f5-4578-a149-3edd94d3815a",
-                "name": "token",
-                "type": "string",
-                "value": "bot{{YOUR_TELEGRAM_BOT}}"
-              },
-              {
-                "id": "d2b9ab83-44ad-4741-aac9-1feed974c015",
-                "name": "test_url",
-                "type": "string",
-                "value": "https://strawstacksolutions.app.n8n.cloud/webhook-test/your-endpoint"
-              },
-              {
-                "id": "0c671fbf-aa2c-42ef-9e8b-398ac38358d0",
-                "name": "production_url",
-                "type": "string",
-                "value": "https://strawstacksolutions.app.n8n.cloud/webhook/your-endpoint"
-              }
-            ]
-          },
-          "options": {}
-        },
-        "id": "ba633ce8-a377-4e79-b7f8-01c148b40723",
-        "name": "Telegram Token & Webhooks",
-        "type": "n8n-nodes-base.set",
-        "position": [
-          1940,
-          -240
-        ],
-        "typeVersion": 3.4
-      },
-      {
-        "parameters": {
-          "chatId": "=-4626445873",
-          "text": "={{ JSON.stringify($json.result, null, 2)  }}",
-          "additionalFields": {}
-        },
-        "id": "c863b918-4cef-4adc-a562-9ee560d8d9a1",
-        "name": "Get Webhook Status",
-        "type": "n8n-nodes-base.telegram",
-        "position": [
-          2380,
-          -240
-        ],
-        "typeVersion": 1.2,
-        "webhookId": "5e4c45be-c593-4050-84c6-08a5dea5ba8c",
-        "credentials": {
-          "telegramApi": {
-            "id": "JdRRjPR0hJjZffy0",
-            "name": "Telegram account"
-          }
-        }
-      },
-      {
-        "parameters": {
-          "assignments": {
-            "assignments": [
-              {
-                "id": "0cea6da1-652a-4c1e-94c3-30608ced90f8",
-                "name": "first_name",
-                "type": "string",
-                "value": "={{ $json.body.message.from.first_name }}"
-              },
-              {
-                "id": "b90280c6-3e36-49ca-9e7e-e15c42d256cc",
-                "name": "last_name",
-                "type": "string",
-                "value": "= {{ $json.body.message.from.last_name }}"
-              },
-              {
-                "id": "f6d86283-16ca-447e-8427-7d3d190babc0",
-                "name": "id",
-                "type": "number",
-                "value": "={{ $json.body.message.from.id }}"
-              }
-            ]
-          },
-          "options": {}
-        },
-        "id": "4607b281-68df-4f6f-a5df-8c18f36ed413",
-        "name": "Validation",
-        "type": "n8n-nodes-base.set",
-        "position": [
-          1100,
-          1160
-        ],
-        "typeVersion": 3.4
-      },
-      {
-        "parameters": {
-          "content": "## Validate Telegram User\n",
-          "height": 260,
-          "width": 420,
-          "color": 7
-        },
-        "id": "68dba5ee-3734-43f7-bee8-9e850463ea8b",
-        "name": "Sticky Note4",
-        "type": "n8n-nodes-base.stickyNote",
-        "position": [
-          1040,
-          1060
-        ],
-        "typeVersion": 1
-      },
-      {
-        "parameters": {
-          "content": "## Webhook Status",
-          "height": 240,
-          "width": 460,
-          "color": 7
-        },
-        "id": "8c587799-5f00-4b9d-bcc2-321531c0e85e",
-        "name": "Sticky Note7",
-        "type": "n8n-nodes-base.stickyNote",
-        "position": [
-          1920,
-          -340
-        ],
-        "typeVersion": 1
-      },
-      {
-        "parameters": {
-          "content": "## Set Webhook for Testing",
-          "height": 240,
-          "width": 460,
-          "color": 7
-        },
-        "id": "0e6401da-0e49-404f-8327-cdc12641d3dd",
-        "name": "Sticky Note8",
-        "type": "n8n-nodes-base.stickyNote",
-        "position": [
-          1460,
-          360
-        ],
-        "typeVersion": 1
-      },
-      {
-        "parameters": {
-          "content": "## Set Webhook for Production",
-          "height": 240,
-          "width": 480,
-          "color": 7
-        },
-        "id": "b36e3d1f-4f61-4dd7-8ee8-7dbe6ff018cd",
-        "name": "Sticky Note9",
-        "type": "n8n-nodes-base.stickyNote",
-        "position": [
-          2240,
-          360
-        ],
-        "typeVersion": 1
-      },
-      {
-        "parameters": {
-          "rules": {
-            "values": [
-              {
-                "conditions": {
-                  "options": {
-                    "version": 2,
-                    "leftValue": "",
-                    "caseSensitive": true,
-                    "typeValidation": "strict"
-                  },
-                  "conditions": [
-                    {
-                      "operator": {
-                        "type": "object",
-                        "operation": "exists",
-                        "singleValue": true
-                      },
-                      "leftValue": "={{ $('Listen for Telegram Events').item.json.body.message.voice }}",
-                      "rightValue": ""
-                    }
-                  ],
-                  "combinator": "and"
-                },
-                "renameOutput": true,
-                "outputKey": "audio"
-              },
-              {
-                "conditions": {
-                  "options": {
-                    "version": 2,
-                    "leftValue": "",
-                    "caseSensitive": true,
-                    "typeValidation": "strict"
-                  },
-                  "conditions": [
-                    {
-                      "id": "342f0883-d959-44a2-b80d-379e39c76218",
-                      "operator": {
-                        "type": "string",
-                        "operation": "exists",
-                        "singleValue": true
-                      },
-                      "leftValue": "={{ $('Listen for Telegram Events').item.json.body.message.text }}",
-                      "rightValue": ""
-                    }
-                  ],
-                  "combinator": "and"
-                },
-                "renameOutput": true,
-                "outputKey": "text"
-              },
-              {
-                "conditions": {
-                  "options": {
-                    "version": 2,
-                    "leftValue": "",
-                    "caseSensitive": true,
-                    "typeValidation": "strict"
-                  },
-                  "conditions": [
-                    {
-                      "id": "ded3a600-f861-413a-8892-3fc5ea935ecb",
-                      "operator": {
-                        "type": "array",
-                        "operation": "exists",
-                        "singleValue": true
-                      },
-                      "leftValue": "={{ $('Listen for Telegram Events').item.json.body.message.photo }}",
-                      "rightValue": ""
-                    }
-                  ],
-                  "combinator": "and"
-                },
-                "renameOutput": true,
-                "outputKey": "image"
-              }
-            ]
-          },
-          "options": {
-            "fallbackOutput": "extra"
-          }
-        },
-        "id": "d0823137-0ca8-430f-b82e-0f4d8558a0c5",
-        "name": "Message Router",
-        "type": "n8n-nodes-base.switch",
-        "position": [
-          1540,
-          1040
-        ],
-        "typeVersion": 3.2
-      },
-      {
-        "parameters": {},
-        "type": "n8n-nodes-base.manualTrigger",
-        "typeVersion": 1,
-        "position": [
-          1720,
-          -240
-        ],
-        "id": "56ab4f60-011d-47fd-ae3a-80e23572abc5",
-        "name": "When clicking ‘Test workflow’"
-      },
-      {
-        "parameters": {
-          "conditions": {
-            "options": {
-              "caseSensitive": true,
-              "leftValue": "",
-              "typeValidation": "loose",
-              "version": 2
-            },
-            "conditions": [
-              {
-                "id": "752f3817-54fb-40ec-bc6d-6d9b4fac6b49",
-                "leftValue": "={{ $json.text.includes('?') }}",
-                "rightValue": "={{ true }}",
-                "operator": {
-                  "type": "string",
-                  "operation": "equals",
-                  "name": "filter.operator.equals"
-                }
-              }
-            ],
-            "combinator": "and"
-          },
-          "looseTypeValidation": true,
-          "options": {}
-        },
-        "type": "n8n-nodes-base.if",
-        "typeVersion": 2.2,
-        "position": [
-          2320,
-          1360
-        ],
-        "id": "e0bfeecd-9db6-495a-9473-06d8d706a4c1",
-        "name": "If"
-      },
-      {
-        "parameters": {
-          "resource": "assistant",
-          "operation": "create",
-          "modelId": {
-            "__rl": true,
-            "value": "gpt-4o",
-            "mode": "list",
-            "cachedResultName": "GPT-4O"
-          },
-          "name": "ChristianQuestionsBot",
-          "description": "The bot designed for answering questions about the faith",
-          "instructions": "=You are a helpful and respectful assistant specialized in Christian theology. Answer all questions based on traditional Christian beliefs, referencing the Bible when appropriate. Keep your tone kind, humble, and conversational, and avoid debating or criticizing other beliefs. If a question is unclear or not related to Christianity, gently encourage the user to ask something related to faith, Jesus Christ, or the Bible.\n\nRespond with answers rooted in the Bible and traditional Christian doctrine. Use scripture when appropriate, and always reflect a Christ-like attitude—humble, patient, and wise.\n",
-          "options": {}
-        },
-        "type": "@n8n/n8n-nodes-langchain.openAi",
-        "typeVersion": 1.8,
-        "position": [
-          2680,
-          1340
-        ],
-        "id": "ae4697c8-cc12-4009-b47b-ad91c3aee149",
-        "name": "OpenAI",
-        "credentials": {
-          "openAiApi": {
-            "id": "tLAjgITbGkNu6aiU",
-            "name": "OpenAi account"
-          }
-        }
-      },
-      {
-        "parameters": {
-          "chatId": "={{ $('Listen for Telegram Events').item.json.body.message.chat.id }}",
-          "text": "={{ $json.message.content }}",
-          "additionalFields": {}
-        },
-        "type": "n8n-nodes-base.telegram",
-        "typeVersion": 1.2,
-        "position": [
-          3520,
-          1340
-        ],
-        "id": "f2396488-3433-429c-a0e1-0f28f731ab56",
-        "name": "Telegram",
-        "webhookId": "1039d9a2-ff3f-45cf-997a-cdb07ccfb94b",
-        "credentials": {
-          "telegramApi": {
-            "id": "JdRRjPR0hJjZffy0",
-            "name": "Telegram account"
-          }
-        }
-      },
-      {
-        "parameters": {
-          "modelId": {
-            "__rl": true,
-            "value": "gpt-4",
-            "mode": "list",
-            "cachedResultName": "GPT-4"
-          },
-          "messages": {
-            "values": [
-              {
-                "content": "= {{ $json.instructions }}",
-                "role": "system"
-              },
-              {
-                "content": "={{ $('If').item.json.text }}"
-              }
-            ]
-          },
-          "options": {}
-        },
-        "type": "@n8n/n8n-nodes-langchain.openAi",
-        "typeVersion": 1.8,
-        "position": [
-          2900,
-          1340
-        ],
-        "id": "bbfeac62-53a2-444f-8563-18411d26b829",
-        "name": "OpenAI2",
-        "credentials": {
-          "openAiApi": {
-            "id": "tLAjgITbGkNu6aiU",
-            "name": "OpenAi account"
-          }
-        }
-      }
-    ],
-    "connections": {
-      "Check User & Chat ID": {
-        "main": [
-          [
+  "nodes": [
+    {
+      "parameters": {
+        "url": "=https://api.telegram.org/{{ $json.token }}/setWebhook",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
             {
-              "node": "Message Router",
-              "type": "main",
-              "index": 0
-            }
-          ],
-          [
-            {
-              "node": "Error message",
-              "type": "main",
-              "index": 0
+              "name": "url",
+              "value": "={{ $json.test_url }}"
             }
           ]
-        ]
+        },
+        "options": {}
       },
-      "Listen for Telegram Events": {
-        "main": [
-          [
-            {
-              "node": "Validation",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
+      "id": "96f0e451-c53b-43eb-af9c-44b2b144646e",
+      "name": "Set Webhook Test URL",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        -3480,
+        -600
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "url": "=https://api.telegram.org/{{$json.token}}/getWebhookInfo",
+        "options": {}
       },
-      "Set Webhook Test URL": {
-        "main": [
-          [
+      "id": "2845daad-74fa-49e1-8205-a6e702c9854f",
+      "name": "Get Telegram Webhook Info",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        -3920,
+        440
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
             {
-              "node": "Test Webhook Status",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Get Telegram Webhook Info": {
-        "main": [
-          [
-            {
-              "node": "Get Webhook Status",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Image Schema": {
-        "main": [
-          [
-            {
-              "node": "Get Image",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "gpt-4o-mini": {
-        "ai_languageModel": [
-          [
-            {
-              "node": "Text Classifier Audio",
-              "type": "ai_languageModel",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Get Audio File": {
-        "main": [
-          [
-            {
-              "node": "Transcribe Recording",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Get Image": {
-        "main": [
-          [
-            {
-              "node": "Extract from File to Base64",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Analyze Image": {
-        "main": [
-          [
-            {
-              "node": "Image Message",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Transcribe Recording": {
-        "main": [
-          [
-            {
-              "node": "Text Classifier Audio",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "gpt-4o-mini1": {
-        "ai_languageModel": [
-          [
-            {
-              "node": "Text Classifier",
-              "type": "ai_languageModel",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Set Webhook Production URL": {
-        "main": [
-          [
-            {
-              "node": "Production Webhook Status",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Edit Fields": {
-        "main": [
-          [
-            {
-              "node": "Text Classifier",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Text Task Message": {
-        "main": [
-          []
-        ]
-      },
-      "Convert to Image File": {
-        "main": [
-          [
-            {
-              "node": "Analyze Image",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Extract from File to Base64": {
-        "main": [
-          [
-            {
-              "node": "Convert to Image File",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Text Classifier Audio": {
-        "main": [
-          [
-            {
-              "node": "Audio Task Message",
-              "type": "main",
-              "index": 0
-            }
-          ],
-          [
-            {
-              "node": "Audio Other Message",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Text Classifier": {
-        "main": [
-          [
-            {
-              "node": "Text Task Message",
-              "type": "main",
-              "index": 0
-            }
-          ],
-          [
-            {
-              "node": "If",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Telegram Token & Webhooks": {
-        "main": [
-          [
-            {
-              "node": "Get Telegram Webhook Info",
-              "type": "main",
-              "index": 0
+              "id": "17989eb0-feca-4631-b5c8-34b1d4a6c72b",
+              "name": "image_file_id",
+              "type": "string",
+              "value": "={{ $json.body.message.photo.last().file_id }}"
             },
             {
-              "node": "Set Webhook Test URL",
-              "type": "main",
-              "index": 0
-            },
-            {
-              "node": "Set Webhook Production URL",
-              "type": "main",
-              "index": 0
+              "id": "9317d7ae-dffd-4b1f-9a9c-b3cc4f1e0dd3",
+              "name": "caption",
+              "type": "string",
+              "value": "={{ $json.body.message.caption }}"
             }
           ]
-        ]
+        },
+        "options": {}
       },
-      "Validation": {
-        "main": [
-          [
-            {
-              "node": "Check User & Chat ID",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
+      "id": "3aae9a60-812a-4908-a97b-1c3ed87797b2",
+      "name": "Image Schema",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        -3880,
+        1960
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.image_file_id }}"
       },
-      "Message Router": {
-        "main": [
-          [
-            {
-              "node": "Get Audio File",
-              "type": "main",
-              "index": 0
-            }
-          ],
-          [
-            {
-              "node": "Edit Fields",
-              "type": "main",
-              "index": 0
-            }
-          ],
-          [
-            {
-              "node": "Image Schema",
-              "type": "main",
-              "index": 0
-            }
-          ],
-          [
-            {
-              "node": "Error message",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "When clicking ‘Test workflow’": {
-        "main": [
-          [
-            {
-              "node": "Telegram Token & Webhooks",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "If": {
-        "main": [
-          [
-            {
-              "node": "OpenAI",
-              "type": "main",
-              "index": 0
-            }
-          ],
-          [
-            {
-              "node": "Text Other Message",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "OpenAI": {
-        "main": [
-          [
-            {
-              "node": "OpenAI2",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "OpenAI2": {
-        "main": [
-          [
-            {
-              "node": "Telegram",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
+      "id": "937e3974-85a9-40f7-93c4-5984f923ea91",
+      "name": "Get Image",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        -3660,
+        1960
+      ],
+      "typeVersion": 1.2,
+      "webhookId": "39d58e81-8495-4fee-8924-590985d3aa76",
+      "credentials": {
+        "telegramApi": {
+          "id": "9I99E0GjisLPP2dH",
+          "name": "Telegram account"
+        }
       }
     },
-    "pinData": {
-      "Listen for Telegram Events": [
-        {
-          "headers": {
-            "host": "strawstacksolutions.app.n8n.cloud",
-            "content-length": "462",
-            "accept-encoding": "gzip, br",
-            "cdn-loop": "cloudflare; loops=1; subreqs=1",
-            "cf-connecting-ip": "91.108.5.69",
-            "cf-ew-via": "15",
-            "cf-ipcountry": "NL",
-            "cf-ray": "92e52ad45312ffef-AMS",
-            "cf-visitor": "{\"scheme\":\"https\"}",
-            "cf-worker": "n8n.cloud",
-            "content-type": "application/json",
-            "x-forwarded-for": "91.108.5.69, 172.71.95.25",
-            "x-forwarded-host": "strawstacksolutions.app.n8n.cloud",
-            "x-forwarded-port": "443",
-            "x-forwarded-proto": "https",
-            "x-forwarded-server": "traefik-prod-users-gwc-41-785c66d969-9hjvc",
-            "x-is-trusted": "yes",
-            "x-real-ip": "91.108.5.69"
-          },
-          "params": {},
-          "query": {},
-          "body": {
-            "update_id": 509441009,
-            "message": {
-              "message_id": 52,
-              "from": {
-                "id": 1710061609,
-                "is_bot": false,
-                "first_name": "The robber",
-                "last_name": "Of the broker",
-                "username": "romaldiniii"
-              },
-              "chat": {
-                "id": -4626445873,
-                "title": "Christian Questions Automated",
-                "type": "group",
-                "all_members_are_administrators": true,
-                "accepted_gift_types": {
-                  "unlimited_gifts": false,
-                  "limited_gifts": false,
-                  "unique_gifts": false,
-                  "premium_subscription": false
-                }
-              },
-              "date": 1744318759,
-              "text": "Who is Jesus The Christ?"
-            }
-          },
-          "webhookUrl": "https://strawstacksolutions.app.n8n.cloud/webhook/your-endpoint",
-          "executionMode": "production"
-        }
+    {
+      "parameters": {
+        "resource": "image",
+        "operation": "analyze",
+        "modelId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "inputType": "base64",
+        "options": {}
+      },
+      "id": "d198f66e-6973-498b-9d88-745c5da36266",
+      "name": "Analyze Image",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "position": [
+        -2840,
+        1960
       ],
-      "Set Webhook Test URL": [
-        {
-          "ok": true,
-          "result": true,
-          "description": "Webhook was set"
+      "typeVersion": 1.6,
+      "credentials": {
+        "openAiApi": {
+          "id": "tLAjgITbGkNu6aiU",
+          "name": "OpenAi account"
         }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "=-4626445873",
+        "text": "={{ $json.description }} for Testing",
+        "additionalFields": {}
+      },
+      "id": "a7702ddf-4223-4217-afa5-8ade1bbac0c1",
+      "name": "Test Webhook Status",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        -3920,
+        180
+      ],
+      "typeVersion": 1.2,
+      "webhookId": "372b418f-8117-47fc-8b30-da534df2a5e4",
+      "credentials": {
+        "telegramApi": {
+          "id": "9I99E0GjisLPP2dH",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "=-4626445873",
+        "text": "={{ $json.description }} for Production",
+        "additionalFields": {}
+      },
+      "id": "501a6cbf-b591-4515-8207-f90b8bff121f",
+      "name": "Production Webhook Status",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        -3920,
+        -80
+      ],
+      "typeVersion": 1.2,
+      "webhookId": "ac580145-2332-4dd0-a9a3-3da70263dd0b",
+      "credentials": {
+        "telegramApi": {
+          "id": "9I99E0GjisLPP2dH",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://api.telegram.org/{{ $json.token }}/setWebhook",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "url",
+              "value": "={{ $json.production_url }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "b9be68b2-32e6-44c5-a835-58ed412abba8",
+      "name": "Set Webhook Production URL",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        -3920,
+        -340
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b37b48ba-8fef-4e6c-bbca-73e6c2e1e0a8",
+              "name": "text",
+              "type": "string",
+              "value": "={{ $('Listen for Telegram Events').item.json.body.message.text }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "01540670-4cf2-4f6d-a450-73a0bf514a75",
+      "name": "Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        -3260,
+        1420
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Listen for Telegram Events').item.json.body.message.chat.id }}",
+        "text": "=Task message: There was an error with generating the image<i>{{ $json.prompts }}</i>",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "id": "177cae8d-04cb-455f-b1d1-e2d9544e01f6",
+      "name": "Text Task Message",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        -540,
+        1260
+      ],
+      "typeVersion": 1.2,
+      "webhookId": "50c6d227-9508-49e3-998e-79f3243d90c0",
+      "credentials": {
+        "telegramApi": {
+          "id": "9I99E0GjisLPP2dH",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Listen for Telegram Events').item.json.body.message.chat.id }}",
+        "text": "=Please send an idea you have in mind for a Youtube Short\nIt has to start with the word \"IDEA:\"\n\nThis was your message: <i>{{ $json.text }}</i>",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "id": "4d14a270-f8a4-48a5-844d-98501ae248cf",
+      "name": "Text Other Message",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        -2820,
+        1520
+      ],
+      "typeVersion": 1.2,
+      "webhookId": "a1edbe87-0e6b-4e92-9ee4-c2e291ec525b",
+      "credentials": {
+        "telegramApi": {
+          "id": "9I99E0GjisLPP2dH",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Listen for Telegram Events').item.json.body.message.chat.id }}",
+        "text": "={{ $json.content }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "7ae7350e-9331-4cdb-96c5-13e6ac9dbeeb",
+      "name": "Image Message",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        -2620,
+        1960
+      ],
+      "typeVersion": 1.2,
+      "webhookId": "e857bc42-951d-41a2-93ff-bc543669e15c",
+      "credentials": {
+        "telegramApi": {
+          "id": "9I99E0GjisLPP2dH",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "data",
+        "options": {
+          "fileName": "={{ $json.result.file_path }}"
+        }
+      },
+      "id": "ed4c6573-7074-4d61-be90-2161a5b78c92",
+      "name": "Convert to Image File",
+      "type": "n8n-nodes-base.convertToFile",
+      "position": [
+        -3140,
+        1960
+      ],
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "operation": "binaryToPropery",
+        "options": {}
+      },
+      "id": "af4ca142-5825-4a51-a351-22141538b3a4",
+      "name": "Extract from File to Base64",
+      "type": "n8n-nodes-base.extractFromFile",
+      "position": [
+        -3440,
+        1960
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "87811892-85f5-4578-a149-3edd94d3815a",
+              "name": "token",
+              "type": "string",
+              "value": "bot8087373967:AAEOv_2CkXgrUzxbKNX_bClUnvXF1xJQf6s"
+            },
+            {
+              "id": "d2b9ab83-44ad-4741-aac9-1feed974c015",
+              "name": "test_url",
+              "type": "string",
+              "value": "https://strawstacksolutions.app.n8n.cloud/webhook-test/your-endpoint"
+            },
+            {
+              "id": "0c671fbf-aa2c-42ef-9e8b-398ac38358d0",
+              "name": "production_url",
+              "type": "string",
+              "value": "https://strawstacksolutions.app.n8n.cloud/webhook/your-endpoint"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a693d533-41c1-4fe6-b118-c1257978cc12",
+      "name": "Telegram Token & Webhooks",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        -3700,
+        -600
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "chatId": "=-4626445873",
+        "text": "={{ JSON.stringify($json.result, null, 2)  }}",
+        "additionalFields": {}
+      },
+      "id": "6c811fbc-e7c4-417a-8269-3901aade8eba",
+      "name": "Get Webhook Status",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        -3700,
+        440
+      ],
+      "typeVersion": 1.2,
+      "webhookId": "5e4c45be-c593-4050-84c6-08a5dea5ba8c",
+      "credentials": {
+        "telegramApi": {
+          "id": "9I99E0GjisLPP2dH",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "id": "342f0883-d959-44a2-b80d-379e39c76218",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    },
+                    "leftValue": "={{ $('Listen for Telegram Events').item.json.body.message.text }}",
+                    "rightValue": ""
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "text"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "id": "ded3a600-f861-413a-8892-3fc5ea935ecb",
+                    "operator": {
+                      "type": "array",
+                      "operation": "exists",
+                      "singleValue": true
+                    },
+                    "leftValue": "={{ $('Listen for Telegram Events').item.json.body.message.photo}}",
+                    "rightValue": ""
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "image"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "id": "f1f77ad1-6bbf-463b-865d-c1ae6ed48286",
+      "name": "Message Router",
+      "type": "n8n-nodes-base.switch",
+      "position": [
+        -3480,
+        1520
+      ],
+      "typeVersion": 3.2
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "752f3817-54fb-40ec-bc6d-6d9b4fac6b49",
+              "leftValue": "={{ $json.text.includes('IDEA:') }}",
+              "rightValue": "={{ true }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -3040,
+        1420
+      ],
+      "id": "c23e3275-aaa4-4aec-90d6-acec442d55b6",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Listen for Telegram Events').item.json.body.message.chat.id }}",
+        "text": "={{ $json.message.content }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -3920,
+        700
+      ],
+      "id": "35b54cc5-a3a6-4f72-bd84-d923d1a5ff60",
+      "name": "Telegram",
+      "webhookId": "1039d9a2-ff3f-45cf-997a-cdb07ccfb94b",
+      "credentials": {
+        "telegramApi": {
+          "id": "9I99E0GjisLPP2dH",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "# How to set up a Telegram Bot WebHook\n\n## WebHook Setup Process\n\n**Basic Concept**\nA WebHook allows your Telegram bot to automatically receive updates instead of manually polling the Bot API.\n\n**Setup Method**\nTo set a WebHook, make a GET request using this URL format:\n```\nhttps://api.telegram.org/bot{my_bot_token}/setWebhook?url={url_to_send_updates_to}\n```\nWhere:\n- `my_bot_token`: Your bot token from BotFather\n- `url_to_send_updates_to`: Your HTTPS endpoint that handles bot updates\n\n\n**Verification**\nTo verify the WebHook setup, use:\n```\nhttps://api.telegram.org/bot{my_bot_token}/getWebhookInfo\n```\n\nA successful response looks like:\n```json\n{\n \"ok\": true,\n \"result\": {\n   \"url\": \"https://www.example.com/my-telegram-bot/\",\n   \"has_custom_certificate\": false,\n   \"pending_update_count\": 0,\n   \"max_connections\": 40\n }\n}\n```\n\n\nThis method provides a simple and efficient way to handle Telegram bot updates automatically through webhooks rather than manual polling.\n\n\n\nAdd your telegram bot to a group where you can send messages. \n\nThen update the {{chat_id}} \n\nTROUBLESHOOTING TIPS:\n\nMake sure your webhook is set to the same url in your webhook node for prod and test.\n\nhit verify info endpoint with your bot token and ensure that the url in the result matches the one in your webhook node. ",
+        "height": 1300,
+        "width": 800,
+        "color": 7
+      },
+      "id": "e43dab14-2953-4e10-a6f5-1445fd829168",
+      "name": "Sticky Note10",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -4900,
+        -660
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "# Process Image",
+        "height": 429,
+        "width": 1253,
+        "color": 5
+      },
+      "id": "85a04956-3c77-49c4-b4dd-50f26479d6d0",
+      "name": "Sticky Note11",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -3940,
+        1840
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "# Telegram Webhook Tools\n\n## Setting your Telegram Bot WebHook the Easy Way\n",
+        "height": 532,
+        "width": 1638,
+        "color": 3
+      },
+      "id": "cf6bcd74-cc90-4d5e-a37f-4919d68673cf",
+      "name": "Sticky Note13",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -4300,
+        -260
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "# Process Content Idea",
+        "height": 429,
+        "width": 1113,
+        "color": 4
+      },
+      "id": "6811d6a5-536b-4dd0-a21e-9a9f6d0f24ed",
+      "name": "Sticky Note14",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -3656.5,
+        1251
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "# Receive Telegram Message with Webhook",
+        "height": 652,
+        "width": 929
+      },
+      "id": "c3e0fd17-c494-4689-b434-a2d701a4182c",
+      "name": "Sticky Note15",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -4114.5,
+        1028
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "your-endpoint",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -3920,
+        1520
+      ],
+      "id": "bb6e469b-2922-4e57-af20-c2ee57f3ea93",
+      "name": "Listen for Telegram Events",
+      "webhookId": "7ca4738a-5597-4d1b-b974-91e7c01678a2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "35b3078a-46b1-48cc-b9e7-86bf33440baf",
+              "name": "bot_chat_id",
+              "value": "={{ $json.body.message.chat.id }}",
+              "type": "string"
+            },
+            {
+              "id": "fec84e34-0dbd-40a6-acb3-7ae3ae4a3441",
+              "name": "message",
+              "value": "={{ $json.body.message.text }}",
+              "type": "string"
+            },
+            {
+              "id": "7f07b8f4-ae45-45ad-9520-f8928f044dff",
+              "name": "open_ai_key",
+              "value": "open_ai_key",
+              "type": "string"
+            },
+            {
+              "id": "afee4ab7-3265-48e5-bcc7-2a97330be3d6",
+              "name": "PiAPI Key",
+              "value": "piapi_key",
+              "type": "string"
+            },
+            {
+              "id": "6cf8b5fd-5c6d-41e8-8ac7-6feeb0d9427c",
+              "name": "Row Id",
+              "value": "={{ Math.random() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -3700,
+        1520
+      ],
+      "id": "4ddb4d2d-d1b0-4744-8dfd-46c6a7f4effa",
+      "name": "Set Core API keys and ids"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.piapi.ai/api/v1/task/{{ $json.data.task_id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-API-Key",
+              "value": "={{ $('Set Core API keys and ids').item.json['PiAPI Key'] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "cbb10f6b-16c8-4692-ae27-3ab80b9e0801",
+      "name": "Get image",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        -1000,
+        1400
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.piapi.ai/api/v1/task",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-API-Key",
+              "value": "={{ $('Set Core API keys and ids').item.json['PiAPI Key'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={\n  \"model\": \"Qubico/flux1-dev\",\n  \"task_type\": \"txt2img\",\n  \"input\": {\n    \"prompt\": \"{{ $json.prompt }}, realistic and casual as if taken by an iphone camera by a TikTok influencer\",\n    \"negative_prompt\": \"taking a photo of a room, recording a video of a room, photos app, video recorder, illegible text, blurry text, low quality text, DSLR, unnatural\",\n    \"width\": 540,\n    \"height\": 960\n  }\n}",
+        "options": {}
+      },
+      "id": "1eeff2d7-4f27-4ab5-bb72-56511cfaa230",
+      "name": "Generate Image",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        -1380,
+        1400
+      ],
+      "retryOnFail": false,
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "amount": 3,
+        "unit": "minutes"
+      },
+      "id": "ccc4af2b-cb53-468d-a8ba-0e6cfe7cc8ab",
+      "name": "Wait 3min",
+      "type": "n8n-nodes-base.wait",
+      "position": [
+        -1220,
+        1400
+      ],
+      "webhookId": "77cdee73-5e99-456a-b5e7-410b4d257669",
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "unit": "minutes"
+      },
+      "id": "618d93f9-15ea-4fad-b3d4-7c06b0dd1c3c",
+      "name": "Wait 5min",
+      "type": "n8n-nodes-base.wait",
+      "position": [
+        -3920,
+        960
+      ],
+      "webhookId": "31d5b1a2-dbb5-4849-ae25-cb491539c16e",
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "567d1fc9-0638-4a44-b5f5-30a9a6683794",
+              "operator": {
+                "name": "filter.operator.equals",
+                "type": "string",
+                "operation": "equals"
+              },
+              "leftValue": "={{ $json.data.status }}",
+              "rightValue": "failed"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "01149467-f3d3-4c54-a85d-d8090c011a04",
+      "name": "Check for failures",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        -780,
+        1400
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "jsCode": "// Sample input string (This can be passed dynamically in n8n)\nconst inputString = $input.first().json.message.content;\n\n// Regular expression to match the strings inside the quotes\nconst pattern = /\"([^\"]+)\"/g;\n\n// Extracting the prompts into an array\nconst prompts = [];\nlet match;\n\nwhile ((match = pattern.exec(inputString)) !== null) {\n    prompts.push(match[1]);\n}\n\n// Remove first 2 and last 2\nconst sliced = prompts.slice(3, -2);\n\n// Convert to individual items\nreturn sliced.map(prompt => ({ json: { prompt } })); "
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2240,
+        1320
+      ],
+      "id": "6a6fbd19-afda-47f1-bf36-f9cf890f9d7e",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "name": "={{ $('Code').item.json.prompts[1] }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1lYluruaoV3Gd86eXJVkhmCXQUOLxC2b4",
+          "mode": "list",
+          "cachedResultName": "YT_SHORTS_IDEAS",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1lYluruaoV3Gd86eXJVkhmCXQUOLxC2b4"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -480,
+        1720
+      ],
+      "id": "57f68b92-62b7-41c8-b5c7-424034969101",
+      "name": "Google Drive1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "BVewCiUV0FemS1Qi",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Listen for Telegram Events').item.json.body.message.chat.id }}",
+        "text": "=Video image generated and added to Google Drive\n\nProceeding to generate video now",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "id": "e662d2c0-8563-4730-85a4-76bb553fe6c7",
+      "name": "Text Task Message1",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        -1040,
+        2060
+      ],
+      "typeVersion": 1.2,
+      "webhookId": "50c6d227-9508-49e3-998e-79f3243d90c0",
+      "credentials": {
+        "telegramApi": {
+          "id": "9I99E0GjisLPP2dH",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "assistant",
+        "operation": "create",
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list",
+          "cachedResultName": "GPT-4O"
+        },
+        "name": "YtContentGeneratorBot",
+        "description": "The bot designed to take content ideas ",
+        "instructions": "=You are a helpful and intelligent content generation assistant. Your job is to take content ideas and return a JSON object, with the given template below:\n\n{\n  \"title\":\"GENERATED_TITLE_PLACEHOLDER\",\n  \"prompt_list\":[\"prompt_1\", \"prompt_2\", \"prompt_3\"],\n  \"script\": \"GENERATED_SCRIPT_PLACEHOLDER\"\n}\n\nNEVER include quotation marks or emojis in your response—flux API will choke on them, and that’s a hard no.\n\nYou will receive an idea for a YouTube short. Your job is to return the JSON object, with the title being a one-line summary of the content idea, the prompt list will be a list of 3 prompts that can be used to generate images relevant to the content idea, and then the script should be a script you generate that is relevant to the title and the prompts.\n\nFor the script, you are also an advanced, unhinged, philosophical prompt-generation AI assistant specializing in expanding short prompt ideas into detailed, hyper-realistic prompts optimized for Qubico/flux1-dev.\n\nThe topic of this narrative will be the already generated title you have produced.\n\nEvery sentence in the script has a conversational flow to it. Let it be thought-provoking and elicit a feeling of motivation in the reader. \n\nFor example, you could receive the following:\nIDEA: Create a YouTube short about how guys feel unworthy when they see a beautiful girl. Your script can take on an example format: \"Do you ever feel unworthy when you look at a beautiful girl? Take a look at this girl. Or how about this girl? Or this girl? How do you feel when you look at her? If your stomach turns because you consider her out of your league, you are not alone. It is part of your evolution to protect yourself from social economics that are not in your favor. What I want you to first identify is that you are special, and that she is no greater than you.\".\n\nThe script should carry a tone of an elder brother, sharing insight into things. In your script generation process, also throw in clever concepts, like \"Do we understand the force that moves the pendulum one way and right back to the other? Or why ripples form when you blow on a pool? If you don't question that, then you don't question yourself nor your league with anyone.\".\nStick to the conversational tone, and always throw in good advice relevant to the content idea. \n\n\nAnd for the prompt generation relevant to the content idea, these are your Top Rules: \nShow a limb (hands, feet) doing something job-focused—typing, holding a resume, adjusting a tie.\nNo off-topic actions like recording videos or snapping pics—job hunting only, fam.\nExtra Vibes:\n\nFull-body awareness: Drop hints of physical feels—cramping fingers, racing pulse, slumping shoulders.\nSensory overload: Hit sight, touch, sound, smell, temperature for max realism (coffee whiffs, keyboard clacks).\nWorld grip: Limbs interact with the scene—tapping keys, handing over papers, stepping up.\nKeep it under 1000 characters, one slick sentence, no fluff or formatting.\nMake it entertaining, relatable, with an Andrew Tate viral edge for the down-and-out job hustlers.\nExamples:\n\nContent idea: Handing over a resume at a job fair\n\nEnvironment_prompt: Hopeful, busy convention hall, suits everywhere\n\nOutput: First person view POV of my hand thrusting out a crisp resume, fingers twitching with nerves as it brushes another palm; in the background, a buzzing convention hall packed with suits, coffee fumes and shoe polish in the air, chatter drowning my pounding heart as I lock eyes with the recruiter.\n\nNO QUOTATION MARKS. NO EMOJIS. EVER.\n\nRULES\nDo not send quotation marks or any extraneous info. Simply return the JSON object as already explained and nothing more.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -2820,
+        1320
+      ],
+      "id": "11dd3f51-ab53-4929-95f7-58c3c32dacfc",
+      "name": "OpenAI1",
+      "credentials": {
+        "openAiApi": {
+          "id": "tLAjgITbGkNu6aiU",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "= {{ $json.instructions }}",
+              "role": "system"
+            },
+            {
+              "content": "={{ $('If').item.json.text }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -2600,
+        1320
+      ],
+      "id": "2030424e-7e00-47c9-8d13-1c491e29e5b2",
+      "name": "OpenAI3",
+      "credentials": {
+        "openAiApi": {
+          "id": "tLAjgITbGkNu6aiU",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "389644a7-eeb3-4ea7-b39d-643659e60c32",
+              "name": "Youtube Shorts Idea",
+              "value": "={{ $('If').item.json.text }}",
+              "type": "string"
+            },
+            {
+              "id": "4e19a9d0-a233-4ddb-88ef-ae3c15f9fdea",
+              "name": "Prompt 1",
+              "value": "={{ $('Code').item.json.prompts[3] }}",
+              "type": "string"
+            },
+            {
+              "id": "038b8914-c34c-47b5-9727-1cbbeccd684c",
+              "name": "Prompt 2",
+              "value": "={{ $('Code').item.json.prompts[4] }}",
+              "type": "string"
+            },
+            {
+              "id": "4b6765cd-48dd-40c0-82e2-80beb39b87e5",
+              "name": "Prompt 3",
+              "value": "={{ $('Code').item.json.prompts[5] }}",
+              "type": "string"
+            },
+            {
+              "id": "ffb63d13-37e2-41be-ae0e-a6606dd39fe6",
+              "name": "Generated Title",
+              "value": "={{ $('Code').item.json.prompts[1] }}",
+              "type": "string"
+            },
+            {
+              "id": "2e14ff06-4025-4fe1-a5b9-cde4a5ebd446",
+              "name": "Script",
+              "value": "={{ $('Code').item.json.prompts[7] }}",
+              "type": "string"
+            },
+            {
+              "id": "bec826de-8c65-4040-8600-95499e02f153",
+              "name": "img_1_google_id",
+              "value": "={{ $('Google Drive1').item.json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "015f3146-5f8c-43f9-89e6-38130838f2b6",
+              "name": "Row Id",
+              "value": "={{ $now.format('HHmmss') }}_{{ Math.random() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -60,
+        1720
+      ],
+      "id": "c2fab258-d63e-4efe-8517-0c3d32f21a71",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1cL_EhGuvDMYe3Dj3FOo6xfNAQhiSNfy58ruIq8Fo4uw",
+          "mode": "list",
+          "cachedResultName": "YT SHORTS GENERATOR",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1cL_EhGuvDMYe3Dj3FOo6xfNAQhiSNfy58ruIq8Fo4uw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1cL_EhGuvDMYe3Dj3FOo6xfNAQhiSNfy58ruIq8Fo4uw/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Youtube Shorts Idea": "={{ $json['Youtube Shorts Idea'] }}",
+            "Prompt 1": "={{ $json['Prompt 1'] }}",
+            "Prompt 2": "={{ $json['Prompt 2'] }}",
+            "Prompt 3": "={{ $json['Prompt 3'] }}",
+            "Generated Title": "={{ $json['Generated Title'] }}",
+            "Script": "={{ $json.Script }}",
+            "GoogleImgId": "={{ $json.img_1_google_id }}",
+            "Row Id": "={{$json['Row Id']}}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Youtube Shorts Idea",
+              "displayName": "Youtube Shorts Idea",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Prompt 1",
+              "displayName": "Prompt 1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Prompt 2",
+              "displayName": "Prompt 2",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Prompt 3",
+              "displayName": "Prompt 3",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Generated Title",
+              "displayName": "Generated Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Script",
+              "displayName": "Script",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Video Url",
+              "displayName": "Video Url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "GoogleImgId",
+              "displayName": "GoogleImgId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Prompt 4",
+              "displayName": "Prompt 4",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Prompt 5",
+              "displayName": "Prompt 5",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Row Id",
+              "displayName": "Row Id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        100,
+        1720
+      ],
+      "id": "d57dbb8c-d5f8-47c9-bedd-bec95ee062fe",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "FXSiTLHryaWLJylR",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://api.piapi.ai/api/v1/task/{{ $json.data.task_id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-API-Key",
+              "value": "={{ $('Set Core API keys and ids').item.json['PiAPI Key'] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "964e495e-73ca-4b4f-8f07-a1c7957c8905",
+      "name": "Get Video",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        -580,
+        2060
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.piapi.ai/api/v1/task",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-API-Key",
+              "value": "={{ $('Set Core API keys and ids').item.json['PiAPI Key'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={\n  \"model\": \"hailuo\",\n  \"task_type\": \"video_generation\",\n  \"input\": {\n    \"prompt\": \"{{ $json.message.content }}\",\n    \"model\": \"i2v-01\",\n    \"image_url\": \"https://drive.google.com/uc?id={{ $('Google Drive1').item.json.id }}\",\n        \"negative_prompt\": \"taking a photo of a room, recording a video of a room, photos app video recorder, illegible text, blurry text, low quality text, DSLR, unnatural\",\n    \"expand_prompt\": false,\n    \"width\": 540,\n    \"height\": 960\n    }\n}\n ",
+        "options": {}
+      },
+      "id": "f2975190-2eb0-46b2-9750-0b33514a940c",
+      "name": "Generate Video",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        -880,
+        2060
+      ],
+      "retryOnFail": false,
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "operation": "share",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "permissionsUi": {
+          "permissionsValues": {
+            "role": "reader",
+            "type": "anyone"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -280,
+        1720
+      ],
+      "id": "953d55c2-0c00-4805-a777-44faf8d7374c",
+      "name": "Google Drive",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "BVewCiUV0FemS1Qi",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.image_url }}",
+        "options": {
+          "response": {
+            "response": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -360,
+        1420
+      ],
+      "id": "6751cc08-de0a-4161-bece-973159f32eeb",
+      "name": "Fetch Image and convert to Binary Data"
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "operation": "analyze",
+        "modelId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "text": "What's in this image? If there's a man or woman in the image, be sure to be specific in the response you give.",
+        "inputType": "base64",
+        "options": {}
+      },
+      "id": "bc00e610-d81e-4419-85d2-4f50664e2bd0",
+      "name": "Analyze Image1",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "position": [
+        -180,
+        1420
+      ],
+      "typeVersion": 1.6,
+      "credentials": {
+        "openAiApi": {
+          "id": "tLAjgITbGkNu6aiU",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "name": "={{ $('Code1').item.json.prompts[1] }} (video)",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1lYluruaoV3Gd86eXJVkhmCXQUOLxC2b4",
+          "mode": "list",
+          "cachedResultName": "YT_SHORTS_IDEAS",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1lYluruaoV3Gd86eXJVkhmCXQUOLxC2b4"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -260,
+        2060
+      ],
+      "id": "3f98ac7b-3c7b-4f27-a881-65b2c813fde5",
+      "name": "Google Drive2",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "BVewCiUV0FemS1Qi",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "share",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "permissionsUi": {
+          "permissionsValues": {
+            "role": "reader",
+            "type": "anyone"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -80,
+        2060
+      ],
+      "id": "0db02455-a8a0-47bd-8e5d-23724e3322a1",
+      "name": "Google Drive3",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "BVewCiUV0FemS1Qi",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are a helpful and intelligent prompt generation assitant. \n\nYour job is to take a given youtube content idea, and the image analysis of a given image, and generate a prompt that will work well with the generation of the video and that is coherent with the image's analysis and the youtube idea , which will be used by Hailuo video generation api. \n\nlet the prompt take a descriptive tone of what the image is already doing, as per the image analysis, but the prompt should make the video take simple . For example, if the image analysis prompt says \"The image has a person standing in the street, during twilight. They are wearing a red jacket and have long hair.\", and the content idea is \"a youtube video about men needing to focus on themselves\", a suitable prompt should be \"a woman is smiling and looking at you, with a simple gaze.\" or \"a woman smiling and being endearing, and waving at you\". \n\nLet the final prompt always be a few phrases long, with just descriptive tones, and let it always have simple gestures made by the subject in the image analysis provided.\n\nDo not return any extraneous data like question marks or quotations. Simply return the prompt that will be used by hailuo. ",
+              "role": "system"
+            },
+            {
+              "content": "=Youtube Content Idea: {{ $('If').item.json.text }}\nCurrent Image content: {{ $json.content }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -1080,
+        1720
+      ],
+      "id": "61d558ac-acd6-4ada-ac44-be3d9d70458e",
+      "name": "Video Prompt Generator",
+      "credentials": {
+        "openAiApi": {
+          "id": "tLAjgITbGkNu6aiU",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "unit": "minutes"
+      },
+      "id": "3cbfb133-72e8-4d55-b1fd-5aef95bc2023",
+      "name": "Wait 5min for Video",
+      "type": "n8n-nodes-base.wait",
+      "position": [
+        -720,
+        2060
+      ],
+      "webhookId": "77cdee73-5e99-456a-b5e7-410b4d257669",
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.data.output.download_url }}",
+        "options": {
+          "response": {
+            "response": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -420,
+        2060
+      ],
+      "id": "6aaffbac-33e6-451d-a0b8-ef74ee86aedd",
+      "name": "Fetch Video and convert to Binary Data"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "125d7a04-3296-4122-9b80-4f45cdc49d9d",
+              "name": "image_url",
+              "value": "={{ $json.data.output.image_url }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -540,
+        1420
+      ],
+      "id": "f1c778f2-de86-4df3-8b9e-76176bc019fe",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Edit Fields2').item.json.image_url }}",
+        "options": {
+          "response": {
+            "response": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -680,
+        1720
+      ],
+      "id": "6d7845e4-1a60-4f3f-ad10-8de2ae79e091",
+      "name": "Fetch Image and convert to Binary Data for G Drive"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -2000,
+        1320
+      ],
+      "id": "b84c8962-2537-4545-85fd-8c965548c420",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Listen for Telegram Events').item.json.body.message.chat.id }}",
+        "text": "=Video Generation Completed! ",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "id": "326fe124-2ecd-4e3f-9a3a-9ffc35cdb187",
+      "name": "Text Task Message3",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        -2460,
+        780
+      ],
+      "typeVersion": 1.2,
+      "webhookId": "50c6d227-9508-49e3-998e-79f3243d90c0",
+      "credentials": {
+        "telegramApi": {
+          "id": "9I99E0GjisLPP2dH",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfor (const item of $input.all()) {\n  item.json.myNewField = 1;\n}\n\nreturn $input.all();"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1620,
+        1400
+      ],
+      "id": "ec58298d-ef9b-49b9-a9df-7df7d0565fe3",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "389644a7-eeb3-4ea7-b39d-643659e60c32",
+              "name": "Youtube Shorts Idea",
+              "value": "={{ $('If').item.json.text }}",
+              "type": "string"
+            },
+            {
+              "id": "bec826de-8c65-4040-8600-95499e02f153",
+              "name": "img_1_google_id",
+              "value": "={{ $('Google Drive1').item.json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "015f3146-5f8c-43f9-89e6-38130838f2b6",
+              "name": "Row Id",
+              "value": "={{ $now.format('HHmmss') }}_{{ Math.random() }}",
+              "type": "string"
+            },
+            {
+              "id": "962e2fe8-0792-41eb-9add-7ff4627c05b4",
+              "name": "Video Url",
+              "value": "={{ $('Google Drive2').item.json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "8968babf-5d26-4362-be63-0c6d80078d94",
+              "name": "Download Url",
+              "value": "={{ $('Fetch Video and convert to Binary Data').item.json.data.output.download_url }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        80,
+        2060
+      ],
+      "id": "0796d9f3-13a2-4384-b9be-1b54a9b2ea49",
+      "name": "Edit Fields3"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1cL_EhGuvDMYe3Dj3FOo6xfNAQhiSNfy58ruIq8Fo4uw",
+          "mode": "list",
+          "cachedResultName": "YT SHORTS GENERATOR",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1cL_EhGuvDMYe3Dj3FOo6xfNAQhiSNfy58ruIq8Fo4uw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1cL_EhGuvDMYe3Dj3FOo6xfNAQhiSNfy58ruIq8Fo4uw/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Youtube Shorts Idea": "={{ $json['Youtube Shorts Idea'] }}",
+            "Prompt 1": "={{ $json['Prompt 1'] }}",
+            "Prompt 2": "={{ $json['Prompt 2'] }}",
+            "Prompt 3": "={{ $json['Prompt 3'] }}",
+            "Generated Title": "={{ $json['Generated Title'] }}",
+            "Script": "={{ $json.Script }}",
+            "GoogleImgId": "={{ $json.img_1_google_id }}",
+            "Row Id": "={{ $('Set Core API keys and ids').item.json['Row Id']}}",
+            "Video Url": "={{$json['Download Url']}}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Youtube Shorts Idea",
+              "displayName": "Youtube Shorts Idea",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Prompt 1",
+              "displayName": "Prompt 1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Prompt 2",
+              "displayName": "Prompt 2",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Prompt 3",
+              "displayName": "Prompt 3",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Generated Title",
+              "displayName": "Generated Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Script",
+              "displayName": "Script",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Video Url",
+              "displayName": "Video Url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "GoogleImgId",
+              "displayName": "GoogleImgId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Prompt 4",
+              "displayName": "Prompt 4",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Prompt 5",
+              "displayName": "Prompt 5",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Row Id",
+              "displayName": "Row Id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        220,
+        2060
+      ],
+      "id": "1bac2811-0250-41a3-a48a-311b09ae814e",
+      "name": "Google Sheets1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "FXSiTLHryaWLJylR",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1cL_EhGuvDMYe3Dj3FOo6xfNAQhiSNfy58ruIq8Fo4uw",
+          "mode": "list",
+          "cachedResultName": "YT SHORTS GENERATOR",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1cL_EhGuvDMYe3Dj3FOo6xfNAQhiSNfy58ruIq8Fo4uw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1cL_EhGuvDMYe3Dj3FOo6xfNAQhiSNfy58ruIq8Fo4uw/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        -1740,
+        1060
+      ],
+      "id": "cce383fe-e69d-4967-9761-1d57ef6da7e2",
+      "name": "Google Sheets2",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "FXSiTLHryaWLJylR",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "# Telegram Webhook Tools\n\n## Setting your Telegram Bot WebHook the Easy Way\n",
+        "height": 532,
+        "width": 1638,
+        "color": 3
+      },
+      "id": "cfd612f2-a9ae-429d-ada0-61bd44851d90",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1800,
+        1760
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "# Telegram Webhook Tools\n\n## Setting your Telegram Bot WebHook the Easy Way\n",
+        "height": 532,
+        "width": 1638,
+        "color": 3
+      },
+      "id": "a06f08da-9dff-4fd4-b0c4-2e8634ea2971",
+      "name": "Sticky Note16",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1800,
+        1760
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "# Add a trigger to this section to have the flow for testing work ",
+        "height": 332,
+        "width": 598,
+        "color": 3
+      },
+      "id": "87b0096f-fea5-4569-b1c4-ed97b984a1f5",
+      "name": "Sticky Note17",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -3820,
+        -880
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfor (const item of $input.all()) {\n  item.json.myNewField = 1;\n}\n \nconst finalPayload = {\n  script: 'Every man walks a path that only he can truly understand.The weights you lift. The challenges you face. The silent battles you fight each day.Society rarely acknowledges your struggles. The pressure to provide, to protect, to perform without complaint.It is not about blame or division – it is about recognizing that your experiences are unique. Your journey is yours alone. Channel that energy inward. Build yourself. Strengthen your mind, your body, your spirit.The greatest respect you can earn is from the man in the mirror.',\n  video_url: $input.all().filter(x =>x.json['Video Url'] != '').map(item => {\n  const url = item.json[\"Video Url\"];\n   return url\n})\n}\n\nreturn {finalPayload}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1560,
+        1060
+      ],
+      "id": "dc4c4c61-2113-4b52-930f-dade5f076299",
+      "name": "Code2"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -2200,
+        800
+      ],
+      "id": "37cc1d67-32ab-4fce-ab1e-8d56021fecf1",
+      "name": "When clicking ‘Test workflow’"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://4827-2a02-c7c-7e53-f400-f415-fd3a-3765-9279.ngrok-free.app/join-videos",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "script",
+              "value": "={{ $json.finalPayload.script }}"
+            },
+            {
+              "name": "video_urls",
+              "value": "={{ $json.finalPayload.video_url }}"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1320,
+        1060
+      ],
+      "id": "d008e252-fba5-4aaa-bb97-461fc0597c00",
+      "name": "HTTP Request"
+    }
+  ],
+  "connections": {
+    "Set Webhook Test URL": {
+      "main": [
+        []
       ]
     },
-    "meta": {
-      "templateCredsSetupCompleted": true,
-      "instanceId": "a4984753ab0734571a90865892b241f7e4fe4a718cd567093525c07af17be3ae"
+    "Get Telegram Webhook Info": {
+      "main": [
+        [
+          {
+            "node": "Get Webhook Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Image Schema": {
+      "main": [
+        [
+          {
+            "node": "Get Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Image": {
+      "main": [
+        [
+          {
+            "node": "Extract from File to Base64",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze Image": {
+      "main": [
+        [
+          {
+            "node": "Image Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Webhook Production URL": {
+      "main": [
+        []
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to Image File": {
+      "main": [
+        [
+          {
+            "node": "Analyze Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File to Base64": {
+      "main": [
+        [
+          {
+            "node": "Convert to Image File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Token & Webhooks": {
+      "main": [
+        [
+          {
+            "node": "Set Webhook Test URL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message Router": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Image Schema",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "OpenAI1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Text Other Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Listen for Telegram Events": {
+      "main": [
+        [
+          {
+            "node": "Set Core API keys and ids",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Core API keys and ids": {
+      "main": [
+        [
+          {
+            "node": "Message Router",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get image": {
+      "main": [
+        [
+          {
+            "node": "Check for failures",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Image": {
+      "main": [
+        [
+          {
+            "node": "Wait 3min",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 3min": {
+      "main": [
+        [
+          {
+            "node": "Get image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 5min": {
+      "main": [
+        []
+      ]
+    },
+    "Check for failures": {
+      "main": [
+        [
+          {
+            "node": "Text Task Message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive1": {
+      "main": [
+        [
+          {
+            "node": "Google Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Text Task Message1": {
+      "main": [
+        [
+          {
+            "node": "Generate Video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI1": {
+      "main": [
+        [
+          {
+            "node": "OpenAI3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI3": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Text Task Message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Video": {
+      "main": [
+        [
+          {
+            "node": "Fetch Video and convert to Binary Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Video": {
+      "main": [
+        [
+          {
+            "node": "Wait 5min for Video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Image and convert to Binary Data": {
+      "main": [
+        [
+          {
+            "node": "Analyze Image1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze Image1": {
+      "main": [
+        [
+          {
+            "node": "Video Prompt Generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive2": {
+      "main": [
+        [
+          {
+            "node": "Google Drive3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive3": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Video Prompt Generator": {
+      "main": [
+        [
+          {
+            "node": "Fetch Image and convert to Binary Data for G Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 5min for Video": {
+      "main": [
+        [
+          {
+            "node": "Get Video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Video and convert to Binary Data": {
+      "main": [
+        [
+          {
+            "node": "Google Drive2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "Fetch Image and convert to Binary Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Image and convert to Binary Data for G Drive": {
+      "main": [
+        [
+          {
+            "node": "Google Drive1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Generate Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields3": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets2": {
+      "main": [
+        [
+          {
+            "node": "Code2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code2": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Test workflow’": {
+      "main": [
+        []
+      ]
     }
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "a4984753ab0734571a90865892b241f7e4fe4a718cd567093525c07af17be3ae"
   }
+}
